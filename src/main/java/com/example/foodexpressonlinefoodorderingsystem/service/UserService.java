@@ -234,19 +234,27 @@ public class UserService {
      * @return List of users with the specified role
      */
     public List<User> getUsersByRole(String role) {
-        String sql = "SELECT * FROM users WHERE role = ? AND is_active = TRUE ORDER BY full_name";
         List<User> users = new ArrayList<>();
 
-        try (Connection conn = DBUtil.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DBUtil.getConnection()) {
+            // Check if is_active column exists
+            boolean hasIsActive = DBUtil.columnExists(conn, "users", "is_active");
 
-            stmt.setString(1, role);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                users.add(mapResultSetToUser(rs));
+            String sql;
+            if (hasIsActive) {
+                sql = "SELECT * FROM users WHERE role = ? AND is_active = TRUE ORDER BY full_name";
+            } else {
+                sql = "SELECT * FROM users WHERE role = ? ORDER BY full_name";
             }
 
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, role);
+                ResultSet rs = stmt.executeQuery();
+
+                while (rs.next()) {
+                    users.add(mapResultSetToUser(rs));
+                }
+            }
         } catch (SQLException e) {
             System.err.println("Error getting users by role: " + e.getMessage());
         }

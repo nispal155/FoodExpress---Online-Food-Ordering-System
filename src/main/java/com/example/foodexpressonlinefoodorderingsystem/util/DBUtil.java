@@ -3,7 +3,9 @@ package com.example.foodexpressonlinefoodorderingsystem.util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
@@ -55,6 +57,24 @@ public class DBUtil {
             } catch (SQLException e) {
                 System.err.println("Error closing connection: " + e.getMessage());
             }
+        }
+    }
+
+    /**
+     * Check if a column exists in a table
+     * @param conn the database connection
+     * @param tableName the table name
+     * @param columnName the column name
+     * @return true if the column exists, false otherwise
+     */
+    public static boolean columnExists(Connection conn, String tableName, String columnName) {
+        try {
+            DatabaseMetaData meta = conn.getMetaData();
+            ResultSet rs = meta.getColumns(null, null, tableName, columnName);
+            return rs.next();
+        } catch (SQLException e) {
+            System.err.println("Error checking if column exists: " + e.getMessage());
+            return false;
         }
     }
 }
