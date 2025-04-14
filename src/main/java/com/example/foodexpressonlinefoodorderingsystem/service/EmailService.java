@@ -1,8 +1,8 @@
 package com.example.foodexpressonlinefoodorderingsystem.service;
 
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+import jakarta.mail.*;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -11,10 +11,10 @@ import java.util.Properties;
  * Service for sending emails
  */
 public class EmailService {
-    
+
     private final Properties properties = new Properties();
     private static final String PROPERTIES_FILE = "mail.properties";
-    
+
     /**
      * Constructor that loads email configuration
      */
@@ -36,7 +36,7 @@ public class EmailService {
             System.err.println("Error loading email properties: " + e.getMessage());
         }
     }
-    
+
     /**
      * Send an email
      * @param to recipient email address
@@ -51,14 +51,14 @@ public class EmailService {
         System.out.println("Subject: " + subject);
         System.out.println("Body: " + body);
         return true;
-        
+
         /*
         // Uncomment this code for actual email sending in production
         try {
             // Get email credentials
             final String username = properties.getProperty("mail.username");
             final String password = properties.getProperty("mail.password");
-            
+
             // Create session
             Session session = Session.getInstance(properties, new Authenticator() {
                 @Override
@@ -66,14 +66,14 @@ public class EmailService {
                     return new PasswordAuthentication(username, password);
                 }
             });
-            
+
             // Create message
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(username));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
             message.setSubject(subject);
             message.setText(body);
-            
+
             // Send message
             Transport.send(message);
             return true;
