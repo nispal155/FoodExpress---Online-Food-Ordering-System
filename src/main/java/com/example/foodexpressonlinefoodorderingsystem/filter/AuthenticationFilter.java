@@ -21,6 +21,7 @@ public class AuthenticationFilter implements Filter {
     // Public URLs that don't require authentication
     private static final List<String> PUBLIC_URLS = Arrays.asList(
             "/", "/index.jsp", "/login", "/register", "/logout", "/home",
+            "/forgot-password", "/reset-password",
             "/css/", "/js/", "/images/", "/assets/", "/favicon.ico",
             "/restaurants", "/restaurant", "/about", "/contact", "/search"
     );

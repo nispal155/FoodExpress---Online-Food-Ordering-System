@@ -438,4 +438,31 @@ public class UserService {
         }
         return user;
     }
+
+    /**
+     * Reset a user's password
+     * @param email the user's email
+     * @param newPassword the new password
+     * @return true if successful, false otherwise
+     */
+    public boolean resetPassword(String email, String newPassword) {
+        String sql = "UPDATE users SET password = ?, updated_at = CURRENT_TIMESTAMP WHERE email = ?";
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            // Hash the new password
+            String hashedPassword = PasswordUtil.hashPassword(newPassword);
+
+            stmt.setString(1, hashedPassword);
+            stmt.setString(2, email);
+
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            System.err.println("Error resetting password: " + e.getMessage());
+            return false;
+        }
+    }
 }
