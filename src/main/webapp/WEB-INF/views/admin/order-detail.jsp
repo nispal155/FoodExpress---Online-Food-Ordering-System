@@ -47,7 +47,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-md-9 col-sm-12">
         <!-- Success and Error Messages -->
         <c:if test="${param.success != null}">
@@ -65,7 +65,7 @@
                 </c:choose>
             </div>
         </c:if>
-        
+
         <c:if test="${param.error != null}">
             <div class="alert alert-danger" role="alert">
                 <c:choose>
@@ -81,7 +81,7 @@
                 </c:choose>
             </div>
         </c:if>
-        
+
         <div class="card">
             <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
@@ -155,7 +155,7 @@
                             </tr>
                         </table>
                     </div>
-                    
+
                     <div class="col-md-6">
                         <h3>Delivery Information</h3>
                         <table class="table">
@@ -200,7 +200,7 @@
                         </table>
                     </div>
                 </div>
-                
+
                 <h3>Order Items</h3>
                 <div class="table-responsive">
                     <table class="table">
@@ -244,7 +244,7 @@
                         </tfoot>
                     </table>
                 </div>
-                
+
                 <div class="row" style="margin-top: 1.5rem;">
                     <div class="col-md-6">
                         <c:if test="${order.canBeAssigned()}">
@@ -270,7 +270,7 @@
                             </div>
                         </c:if>
                     </div>
-                    
+
                     <div class="col-md-6">
                         <c:if test="${order.canUpdateStatus()}">
                             <div class="card">
@@ -311,11 +311,18 @@
                         </c:if>
                     </div>
                 </div>
-                
+
                 <div style="margin-top: 1.5rem;">
                     <a href="${pageContext.request.contextPath}/admin/orders" class="btn btn-secondary">
                         <i class="fas fa-arrow-left"></i> Back to Orders
                     </a>
+
+                    <c:if test="${order.status == 'READY' || order.status == 'PREPARING' || order.status == 'CONFIRMED'}">
+                        <a href="${pageContext.request.contextPath}/admin/orders/assign?id=${order.id}" class="btn btn-primary">
+                            <i class="fas fa-user-plus"></i> Assign Delivery Person
+                        </a>
+                    </c:if>
+
                     <c:if test="${order.canBeCancelled()}">
                         <button type="button" class="btn btn-danger" onclick="confirmCancel(${order.id})">
                             <i class="fas fa-times"></i> Cancel Order

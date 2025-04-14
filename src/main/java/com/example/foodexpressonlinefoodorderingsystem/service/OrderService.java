@@ -761,4 +761,63 @@ public class OrderService {
 
         return 0;
     }
+
+    /**
+     * Assign an order to a delivery person
+     * @param orderId the order ID
+     * @param deliveryUserId the delivery user ID (can be null to unassign)
+     * @return true if successful, false otherwise
+     */
+    public boolean assignOrderToDeliveryPerson(int orderId, Integer deliveryUserId) {
+        String sql;
+        if (deliveryUserId == null) {
+            sql = "UPDATE orders SET delivery_user_id = NULL, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+        } else {
+            sql = "UPDATE orders SET delivery_user_id = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+        }
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            if (deliveryUserId == null) {
+                stmt.setInt(1, orderId);
+            } else {
+                stmt.setInt(1, deliveryUserId);
+                stmt.setInt(2, orderId);
+            }
+
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            System.err.println("Error assigning order to delivery person: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Update the real-time location of a delivery person for an order
+     * @param orderId the order ID
+     * @param latitude the latitude coordinate
+     * @param longitude the longitude coordinate
+     * @return true if successful, false otherwise
+     */
+    public boolean updateDeliveryLocation(int orderId, double latitude, double longitude) {
+        String sql = "UPDATE orders SET delivery_latitude = ?, delivery_longitude = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setDouble(1, latitude);
+            stmt.setDouble(2, longitude);
+            stmt.setInt(3, orderId);
+
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            System.err.println("Error updating delivery location: " + e.getMessage());
+            return false;
+        }
+    }
 }
