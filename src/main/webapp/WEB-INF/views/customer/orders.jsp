@@ -7,7 +7,7 @@
 
 <div class="container" style="padding: 2rem 0;">
     <h1 style="margin-bottom: 2rem;">My Orders</h1>
-    
+
     <!-- Success and Error Messages -->
     <c:if test="${param.success != null}">
         <div class="alert alert-success" role="alert">
@@ -24,7 +24,7 @@
             </c:choose>
         </div>
     </c:if>
-    
+
     <c:if test="${param.error != null}">
         <div class="alert alert-danger" role="alert">
             <c:choose>
@@ -46,7 +46,7 @@
             </c:choose>
         </div>
     </c:if>
-    
+
     <!-- Orders List -->
     <c:choose>
         <c:when test="${not empty orders}">
@@ -56,20 +56,26 @@
                         <div class="card">
                             <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                                 <h5 class="mb-0">Order #${order.id}</h5>
-                                <span class="badge ${order.statusCssClass}">${order.statusDisplayName}</span>
+                                <span class="badge" style="${order.status == 'PENDING' ? 'background-color: #6c757d;' :
+                                                    order.status == 'CONFIRMED' ? 'background-color: #007bff;' :
+                                                    order.status == 'PREPARING' ? 'background-color: #ffc107;' :
+                                                    order.status == 'READY' ? 'background-color: #17a2b8;' :
+                                                    order.status == 'OUT_FOR_DELIVERY' ? 'background-color: #6f42c1;' :
+                                                    order.status == 'DELIVERED' ? 'background-color: #28a745;' :
+                                                    order.status == 'CANCELLED' ? 'background-color: #dc3545;' : 'background-color: #6c757d;'}">${order.status.displayName}</span>
                             </div>
                             <div class="card-body">
                                 <p><strong>Restaurant:</strong> ${order.restaurantName}</p>
                                 <p><strong>Date:</strong> <fmt:formatDate value="${order.orderDate}" pattern="MMM dd, yyyy HH:mm" /></p>
                                 <p><strong>Total:</strong> $<fmt:formatNumber value="${order.totalAmount}" pattern="#,##0.00" /></p>
-                                
+
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
                                     <a href="${pageContext.request.contextPath}/orders/details/${order.id}" class="btn btn-primary">
                                         <i class="fas fa-info-circle"></i> View Details
                                     </a>
-                                    
+
                                     <c:if test="${order.status == 'PENDING' || order.status == 'CONFIRMED'}">
-                                        <form action="${pageContext.request.contextPath}/orders/cancel/${order.id}" method="post" 
+                                        <form action="${pageContext.request.contextPath}/orders/cancel/${order.id}" method="post"
                                               onsubmit="return confirm('Are you sure you want to cancel this order?');">
                                             <button type="submit" class="btn btn-danger">
                                                 <i class="fas fa-times-circle"></i> Cancel Order
