@@ -47,7 +47,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-md-9 col-sm-12">
         <div class="card">
             <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
@@ -56,7 +56,7 @@
                     <i class="fas fa-arrow-left"></i> Back to Orders
                 </a>
             </div>
-            
+
             <div class="card-body">
                 <!-- Success and Error Messages -->
                 <c:if test="${param.success != null}">
@@ -74,7 +74,7 @@
                         </c:choose>
                     </div>
                 </c:if>
-                
+
                 <c:if test="${param.error != null}">
                     <div class="alert alert-danger" role="alert">
                         <c:choose>
@@ -96,7 +96,7 @@
                         </c:choose>
                     </div>
                 </c:if>
-                
+
                 <div class="row">
                     <!-- Order Details -->
                     <div class="col-md-8">
@@ -124,7 +124,7 @@
                                         </c:if>
                                     </div>
                                 </div>
-                                
+
                                 <div class="mb-3">
                                     <h5>Delivery Information</h5>
                                     <p><strong>Address:</strong> ${order.deliveryAddress}</p>
@@ -133,7 +133,7 @@
                                         <p><strong>Notes:</strong> ${order.deliveryNotes}</p>
                                     </c:if>
                                 </div>
-                                
+
                                 <div class="mb-3">
                                     <h5>Delivery Assignment</h5>
                                     <c:choose>
@@ -151,7 +151,7 @@
                                         </c:otherwise>
                                     </c:choose>
                                 </div>
-                                
+
                                 <div class="mb-3">
                                     <h5>Order Status</h5>
                                     <c:if test="${order.status != 'DELIVERED' && order.status != 'CANCELLED'}">
@@ -159,7 +159,7 @@
                                             <i class="fas fa-edit"></i> Update Status
                                         </button>
                                     </c:if>
-                                    
+
                                     <c:if test="${order.status == 'PENDING' || order.status == 'CONFIRMED'}">
                                         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelModal">
                                             <i class="fas fa-times-circle"></i> Cancel Order
@@ -169,7 +169,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Order Items -->
                     <div class="col-md-4">
                         <div class="card">
@@ -190,14 +190,14 @@
                                         </div>
                                     </c:forEach>
                                 </div>
-                                
+
                                 <hr>
-                                
+
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
                                     <span>Subtotal:</span>
                                     <span>$<fmt:formatNumber value="${order.totalAmount}" pattern="#,##0.00" /></span>
                                 </div>
-                                
+
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-weight: bold;">
                                     <span>Total:</span>
                                     <span>$<fmt:formatNumber value="${order.totalAmount}" pattern="#,##0.00" /></span>
@@ -219,7 +219,7 @@
                 <h5 class="modal-title" id="assignModalLabel">Assign Delivery Person</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="${pageContext.request.contextPath}/admin/orders/assign/${order.id}" method="post">
+            <form action="${pageContext.request.contextPath}/admin/orders/assign-legacy/${order.id}" method="post">
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="deliveryUserId" class="form-label">Select Delivery Person</label>
@@ -248,7 +248,7 @@
                 <h5 class="modal-title" id="reassignModalLabel">Reassign Delivery Person</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="${pageContext.request.contextPath}/admin/orders/assign/${order.id}" method="post">
+            <form action="${pageContext.request.contextPath}/admin/orders/assign-legacy/${order.id}" method="post">
                 <div class="modal-body">
                     <p>Currently assigned to: <strong>${order.deliveryPersonName}</strong></p>
                     <div class="mb-3">
