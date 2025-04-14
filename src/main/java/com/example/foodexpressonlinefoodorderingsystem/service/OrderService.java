@@ -621,15 +621,23 @@ public class OrderService {
         order.setDeliveryPhone(rs.getString("delivery_phone"));
         order.setDeliveryNotes(rs.getString("delivery_notes"));
 
-        // Handle nullable timestamps
-        Timestamp estimatedDeliveryTime = rs.getTimestamp("estimated_delivery_time");
-        if (estimatedDeliveryTime != null) {
-            order.setEstimatedDeliveryTime(estimatedDeliveryTime);
+        // Handle nullable timestamps with column existence check
+        try {
+            Timestamp estimatedDeliveryTime = rs.getTimestamp("estimated_delivery_time");
+            if (estimatedDeliveryTime != null) {
+                order.setEstimatedDeliveryTime(estimatedDeliveryTime);
+            }
+        } catch (SQLException e) {
+            // Column might not exist yet, ignore
         }
 
-        Timestamp actualDeliveryTime = rs.getTimestamp("actual_delivery_time");
-        if (actualDeliveryTime != null) {
-            order.setActualDeliveryTime(actualDeliveryTime);
+        try {
+            Timestamp actualDeliveryTime = rs.getTimestamp("actual_delivery_time");
+            if (actualDeliveryTime != null) {
+                order.setActualDeliveryTime(actualDeliveryTime);
+            }
+        } catch (SQLException e) {
+            // Column might not exist yet, ignore
         }
 
         order.setCreatedAt(rs.getTimestamp("created_at"));

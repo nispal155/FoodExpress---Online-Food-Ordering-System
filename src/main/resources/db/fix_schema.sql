@@ -1,4 +1,4 @@
--- Add missing columns to orders table if they don't exist
+-- Add delivery_user_id column to orders table if it doesn't exist
 SET @column_exists = (
     SELECT COUNT(*)
     FROM information_schema.COLUMNS
@@ -10,6 +10,42 @@ SET @column_exists = (
 SET @sql = IF(@column_exists = 0,
     'ALTER TABLE orders ADD COLUMN delivery_user_id INT NULL',
     'SELECT "Column delivery_user_id already exists"'
+);
+
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+-- Add estimated_delivery_time column to orders table if it doesn't exist
+SET @column_exists = (
+    SELECT COUNT(*)
+    FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = DATABASE()
+    AND TABLE_NAME = 'orders'
+    AND COLUMN_NAME = 'estimated_delivery_time'
+);
+
+SET @sql = IF(@column_exists = 0,
+    'ALTER TABLE orders ADD COLUMN estimated_delivery_time TIMESTAMP NULL',
+    'SELECT "Column estimated_delivery_time already exists"'
+);
+
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+-- Add actual_delivery_time column to orders table if it doesn't exist
+SET @column_exists = (
+    SELECT COUNT(*)
+    FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = DATABASE()
+    AND TABLE_NAME = 'orders'
+    AND COLUMN_NAME = 'actual_delivery_time'
+);
+
+SET @sql = IF(@column_exists = 0,
+    'ALTER TABLE orders ADD COLUMN actual_delivery_time TIMESTAMP NULL',
+    'SELECT "Column actual_delivery_time already exists"'
 );
 
 PREPARE stmt FROM @sql;
