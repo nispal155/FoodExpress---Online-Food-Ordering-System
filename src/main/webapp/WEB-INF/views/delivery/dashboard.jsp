@@ -32,7 +32,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-md-9 col-sm-12">
         <div class="row">
             <div class="col-md-4 col-sm-6 col-xs-12" style="margin-bottom: 1.5rem;">
@@ -45,7 +45,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-md-4 col-sm-6 col-xs-12" style="margin-bottom: 1.5rem;">
                 <div class="card" style="background-color: rgba(156, 39, 176, 0.1); border-color: #9c27b0;">
                     <div style="text-align: center; padding: 1rem;">
@@ -56,7 +56,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-md-4 col-sm-6 col-xs-12" style="margin-bottom: 1.5rem;">
                 <div class="card" style="background-color: rgba(0, 150, 136, 0.1); border-color: #009688;">
                     <div style="text-align: center; padding: 1rem;">
@@ -68,7 +68,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="card">
             <div class="card-header">
                 <h2 class="card-title">My Assigned Orders</h2>
@@ -132,6 +132,43 @@
                 </c:choose>
             </div>
         </div>
+
+        <c:if test="${not empty availableOrders}">
+            <div class="card" style="margin-top: 1.5rem;">
+                <div class="card-header">
+                    <h2 class="card-title">Available Orders for Pickup</h2>
+                </div>
+                <div style="padding: 1rem;">
+                    <div class="alert alert-info" role="alert">
+                        <i class="fas fa-info-circle"></i> These orders are ready for delivery but not yet assigned to any delivery person. Contact your manager to get assigned to these orders.
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Restaurant</th>
+                                    <th>Amount</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <c:forEach var="order" items="${availableOrders}">
+                                    <tr>
+                                        <td>#${order.id}</td>
+                                        <td>${order.customerName}</td>
+                                        <td>${order.restaurantName}</td>
+                                        <td>$<fmt:formatNumber value="${order.totalAmount}" pattern="#,##0.00" /></td>
+                                        <td><fmt:formatDate value="${order.orderDate}" pattern="yyyy-MM-dd HH:mm" /></td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </c:if>
     </div>
 </div>
 

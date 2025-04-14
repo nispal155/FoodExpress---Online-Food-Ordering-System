@@ -701,4 +701,64 @@ public class OrderService {
 
         return orderItem;
     }
+
+    /**
+     * Get orders that are ready for delivery but not yet assigned to a delivery person
+     * @return List of orders ready for delivery
+     */
+    public List<Order> getOrdersReadyForDelivery() {
+        String sql = "SELECT o.*, " +
+                     "u.full_name AS customer_name, " +
+                     "r.name AS restaurant_name, " +
+                     "du.full_name AS delivery_person_name " +
+                     "FROM orders o " +
+                     "JOIN users u ON o.user_id = u.id " +
+                     "JOIN restaurants r ON o.restaurant_id = r.id " +
+                     "LEFT JOIN users du ON o.delivery_user_id = du.id " +
+                     "WHERE o.status = 'READY' AND o.delivery_user_id IS NULL " +
+                     "ORDER BY o.order_date ASC";
+
+        List<Order> orders = new ArrayList<>();
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                orders.add(mapResultSetToOrder(rs));
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error getting orders ready for delivery: " + e.getMessage());
+        }
+
+        return orders;
+    }
+
+    /**
+     * Get the count of completed orders by a delivery person
+     * @param deliveryUserId the delivery user ID
+     * @return count of completed orders
+     */
+    public int getCompletedOrderCountByDeliveryPerson(int deliveryUserId) {
+        String sql = "SELECT COUNT(*) FROM orders " +
+                     "WHERE delivery_user_id = ? AND status = 'DELIVERED'";
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, deliveryUserId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error getting completed order count: " + e.getMessage());
+        }
+
+        return 0;
+    }
 }
