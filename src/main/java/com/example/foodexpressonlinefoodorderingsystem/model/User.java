@@ -18,6 +18,7 @@ public class User {
     private Date lastLogin;
     private boolean isActive;
     private String role; // "ADMIN", "CUSTOMER", "DELIVERY"
+    private String profilePicture; // Path to profile picture
 
     // Default constructor
     public User() {
@@ -136,6 +137,14 @@ public class User {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
 
     @Override

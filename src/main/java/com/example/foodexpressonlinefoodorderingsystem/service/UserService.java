@@ -97,8 +97,8 @@ public class UserService {
      * @return true if successful, false otherwise
      */
     public boolean createUser(User user) {
-        String sql = "INSERT INTO users (username, password, email, full_name, phone, address, role, is_active) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO users (username, password, email, full_name, phone, address, role) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -113,7 +113,6 @@ public class UserService {
             stmt.setString(5, user.getPhone());
             stmt.setString(6, user.getAddress());
             stmt.setString(7, user.getRole());
-            stmt.setBoolean(8, user.isActive() || true); // Default to true if not set
 
             int affectedRows = stmt.executeUpdate();
 
@@ -148,11 +147,11 @@ public class UserService {
         String sql;
         if (updatePassword) {
             sql = "UPDATE users SET username = ?, password = ?, email = ?, full_name = ?, " +
-                  "phone = ?, address = ?, role = ?, is_active = ?, updated_at = CURRENT_TIMESTAMP " +
+                  "phone = ?, address = ?, role = ?, profile_picture = ?, updated_at = CURRENT_TIMESTAMP " +
                   "WHERE id = ?";
         } else {
             sql = "UPDATE users SET username = ?, email = ?, full_name = ?, " +
-                  "phone = ?, address = ?, role = ?, is_active = ?, updated_at = CURRENT_TIMESTAMP " +
+                  "phone = ?, address = ?, role = ?, profile_picture = ?, updated_at = CURRENT_TIMESTAMP " +
                   "WHERE id = ?";
         }
 
@@ -173,7 +172,7 @@ public class UserService {
             stmt.setString(paramIndex++, user.getPhone());
             stmt.setString(paramIndex++, user.getAddress());
             stmt.setString(paramIndex++, user.getRole());
-            stmt.setBoolean(paramIndex++, user.isActive());
+            stmt.setString(paramIndex++, user.getProfilePicture());
             stmt.setInt(paramIndex, user.getId());
 
             int affectedRows = stmt.executeUpdate();
@@ -439,12 +438,11 @@ public class UserService {
             // Ignore if the column doesn't exist
         }
 
-        // Get is_active if it exists in the result set
+        // Get profile_picture if it exists in the result set
         try {
-            user.setActive(rs.getBoolean("is_active"));
+            user.setProfilePicture(rs.getString("profile_picture"));
         } catch (SQLException e) {
-            // If the column doesn't exist, default to active
-            user.setActive(true);
+            // Ignore if the column doesn't exist
         }
 
         return user;
@@ -473,6 +471,34 @@ public class UserService {
 
         } catch (SQLException e) {
             System.err.println("Error resetting password: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Verify a user's password
+     * @param userId the user ID
+     * @param password the password to verify
+     * @return true if the password is correct, false otherwise
+     */
+    public boolean verifyPassword(int userId, String password) {
+        String sql = "SELECT password FROM users WHERE id = ?";
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                String storedPassword = rs.getString("password");
+                return PasswordUtil.verifyPassword(password, storedPassword);
+            }
+
+            return false;
+
+        } catch (SQLException e) {
+            System.err.println("Error verifying password: " + e.getMessage());
             return false;
         }
     }
