@@ -55,7 +55,7 @@
                 <div style="background-color: #f9f9f9; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
                     <img src="${pageContext.request.contextPath}/assets/images/team-1.jpg" alt="Team Member" style="width: 100%; height: 200px; object-fit: cover;">
                     <div style="padding: 1rem;">
-                        <h4 style="margin-bottom: 0.25rem;">John Doe</h4>
+                        <h4 style="margin-bottom: 0.25rem;">Nispal Bhattarai</h4>
                         <p style="color: var(--primary-color); margin-bottom: 0.5rem;">CEO & Co-Founder</p>
                         <p style="font-size: 0.9rem; color: var(--medium-gray); margin-bottom: 0;">Food enthusiast and tech innovator with a passion for creating exceptional customer experiences.</p>
                     </div>
@@ -66,7 +66,7 @@
                 <div style="background-color: #f9f9f9; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
                     <img src="${pageContext.request.contextPath}/assets/images/team-2.jpg" alt="Team Member" style="width: 100%; height: 200px; object-fit: cover;">
                     <div style="padding: 1rem;">
-                        <h4 style="margin-bottom: 0.25rem;">Jane Smith</h4>
+                        <h4 style="margin-bottom: 0.25rem;">Srijal Parajuli</h4>
                         <p style="color: var(--primary-color); margin-bottom: 0.5rem;">CTO & Co-Founder</p>
                         <p style="font-size: 0.9rem; color: var(--medium-gray); margin-bottom: 0;">Tech wizard with a background in software engineering and a love for solving complex problems.</p>
                     </div>
@@ -77,7 +77,7 @@
                 <div style="background-color: #f9f9f9; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
                     <img src="${pageContext.request.contextPath}/assets/images/team-3.jpg" alt="Team Member" style="width: 100%; height: 200px; object-fit: cover;">
                     <div style="padding: 1rem;">
-                        <h4 style="margin-bottom: 0.25rem;">Michael Johnson</h4>
+                        <h4 style="margin-bottom: 0.25rem;">Ankita Raut</h4>
                         <p style="color: var(--primary-color); margin-bottom: 0.5rem;">COO</p>
                         <p style="font-size: 0.9rem; color: var(--medium-gray); margin-bottom: 0;">Operations expert with experience in logistics and a commitment to efficiency and excellence.</p>
                     </div>
@@ -88,7 +88,7 @@
                 <div style="background-color: #f9f9f9; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
                     <img src="${pageContext.request.contextPath}/assets/images/team-4.jpg" alt="Team Member" style="width: 100%; height: 200px; object-fit: cover;">
                     <div style="padding: 1rem;">
-                        <h4 style="margin-bottom: 0.25rem;">Emily Chen</h4>
+                        <h4 style="margin-bottom: 0.25rem;">Gyanendra Basnet</h4>
                         <p style="color: var(--primary-color); margin-bottom: 0.5rem;">CMO</p>
                         <p style="font-size: 0.9rem; color: var(--medium-gray); margin-bottom: 0;">Marketing strategist with a creative approach to building brand awareness and customer engagement.</p>
                     </div>

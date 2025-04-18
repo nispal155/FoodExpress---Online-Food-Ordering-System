@@ -465,4 +465,34 @@ public class UserService {
             return false;
         }
     }
+
+    /**
+     * Search users by name, email, or username
+     * @param query the search query
+     * @return List of users matching the search criteria
+     */
+    public List<User> searchUsers(String query) {
+        String sql = "SELECT * FROM users WHERE username LIKE ? OR email LIKE ? OR full_name LIKE ? ORDER BY full_name";
+        List<User> users = new ArrayList<>();
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            String searchPattern = "%" + query + "%";
+            stmt.setString(1, searchPattern);
+            stmt.setString(2, searchPattern);
+            stmt.setString(3, searchPattern);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                users.add(mapResultSetToUser(rs));
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error searching users: " + e.getMessage());
+        }
+
+        return users;
+    }
 }
