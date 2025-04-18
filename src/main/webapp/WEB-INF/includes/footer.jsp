@@ -38,7 +38,7 @@
             </div>
             
             <div class="footer-bottom">
-                <p>&copy; @ 2025 Food Express. All rights reserved.</p>
+                <p>&copy; ${java.time.Year.now().getValue()} Food Express. All rights reserved.</p>
             </div>
         </div>
     </footer>
