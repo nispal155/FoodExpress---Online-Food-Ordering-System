@@ -97,8 +97,8 @@ public class UserService {
      * @return true if successful, false otherwise
      */
     public boolean createUser(User user) {
-        String sql = "INSERT INTO users (username, password, email, full_name, phone, address, role) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO users (username, password, email, full_name, phone, address, role, is_active) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -113,6 +113,7 @@ public class UserService {
             stmt.setString(5, user.getPhone());
             stmt.setString(6, user.getAddress());
             stmt.setString(7, user.getRole());
+            stmt.setBoolean(8, user.isActive() || true); // Default to true if not set
 
             int affectedRows = stmt.executeUpdate();
 
@@ -147,11 +148,11 @@ public class UserService {
         String sql;
         if (updatePassword) {
             sql = "UPDATE users SET username = ?, password = ?, email = ?, full_name = ?, " +
-                  "phone = ?, address = ?, role = ?, updated_at = CURRENT_TIMESTAMP " +
+                  "phone = ?, address = ?, role = ?, is_active = ?, updated_at = CURRENT_TIMESTAMP " +
                   "WHERE id = ?";
         } else {
             sql = "UPDATE users SET username = ?, email = ?, full_name = ?, " +
-                  "phone = ?, address = ?, role = ?, updated_at = CURRENT_TIMESTAMP " +
+                  "phone = ?, address = ?, role = ?, is_active = ?, updated_at = CURRENT_TIMESTAMP " +
                   "WHERE id = ?";
         }
 
@@ -172,6 +173,7 @@ public class UserService {
             stmt.setString(paramIndex++, user.getPhone());
             stmt.setString(paramIndex++, user.getAddress());
             stmt.setString(paramIndex++, user.getRole());
+            stmt.setBoolean(paramIndex++, user.isActive());
             stmt.setInt(paramIndex, user.getId());
 
             int affectedRows = stmt.executeUpdate();
@@ -436,6 +438,15 @@ public class UserService {
         } catch (SQLException e) {
             // Ignore if the column doesn't exist
         }
+
+        // Get is_active if it exists in the result set
+        try {
+            user.setActive(rs.getBoolean("is_active"));
+        } catch (SQLException e) {
+            // If the column doesn't exist, default to active
+            user.setActive(true);
+        }
+
         return user;
     }
 
