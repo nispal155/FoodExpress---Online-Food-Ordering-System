@@ -80,10 +80,18 @@ public class AuthenticationFilter implements Filter {
         }
 
         // Check if the requested URL requires admin role
-        if (isAdminURL(relativePath) && !"ADMIN".equals(user.getRole())) {
-            // User is not an admin, redirect to dashboard
-            httpResponse.sendRedirect(contextPath + "/dashboard");
-            return;
+        if (isAdminURL(relativePath)) {
+            System.out.println("DEBUG: AuthenticationFilter - URL requires admin role: " + relativePath);
+            System.out.println("DEBUG: AuthenticationFilter - User role is: " + user.getRole());
+
+            if (!"ADMIN".equals(user.getRole())) {
+                // User is not an admin, redirect to dashboard
+                System.out.println("DEBUG: AuthenticationFilter - User is not an admin, redirecting to dashboard");
+                httpResponse.sendRedirect(contextPath + "/dashboard");
+                return;
+            } else {
+                System.out.println("DEBUG: AuthenticationFilter - User is admin, allowing access to: " + relativePath);
+            }
         }
 
         // Check if the requested URL requires delivery role
@@ -117,7 +125,9 @@ public class AuthenticationFilter implements Filter {
      * @return true if the URL requires admin role, false otherwise
      */
     private boolean isAdminURL(String url) {
-        return url.startsWith("/admin");
+        boolean isAdmin = url.startsWith("/admin");
+        System.out.println("DEBUG: isAdminURL - Checking if URL requires admin role: " + url + " - Result: " + isAdmin);
+        return isAdmin;
     }
 
     /**

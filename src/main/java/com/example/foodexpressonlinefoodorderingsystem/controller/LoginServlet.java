@@ -95,14 +95,22 @@ public class LoginServlet extends HttpServlet {
             throws IOException {
         String contextPath = request.getContextPath();
 
+        // Debug logging
+        System.out.println("DEBUG: User role is " + user.getRole());
+        System.out.println("DEBUG: User ID is " + user.getId());
+        System.out.println("DEBUG: User is active: " + user.isActive());
+
         switch (user.getRole()) {
             case "ADMIN":
+                System.out.println("DEBUG: Redirecting to admin dashboard");
                 response.sendRedirect(contextPath + "/admin/dashboard");
                 break;
             case "DELIVERY":
+                System.out.println("DEBUG: Redirecting to delivery dashboard");
                 response.sendRedirect(contextPath + "/delivery/dashboard");
                 break;
             default: // CUSTOMER
+                System.out.println("DEBUG: Redirecting to customer dashboard");
                 response.sendRedirect(contextPath + "/dashboard");
                 break;
         }
