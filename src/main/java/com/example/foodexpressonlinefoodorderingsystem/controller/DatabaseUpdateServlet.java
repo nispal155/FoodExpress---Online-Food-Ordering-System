@@ -1,0 +1,85 @@
+package com.example.foodexpressonlinefoodorderingsystem.controller;
+
+import com.example.foodexpressonlinefoodorderingsystem.util.DBUtil;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+/**
+ * Servlet for updating the database schema
+ */
+@WebServlet(name = "DatabaseUpdateServlet", urlPatterns = {"/update-database"})
+public class DatabaseUpdateServlet extends HttpServlet {
+    
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+        
+        out.println("<html><head><title>Database Update</title></head><body>");
+        out.println("<h1>Database Update</h1>");
+        
+        // Add profile_picture column to users table
+        boolean success = addProfilePictureColumn();
+        
+        if (success) {
+            out.println("<p style='color: green;'>The profile_picture column was added successfully!</p>");
+        } else {
+            out.println("<p style='color: red;'>Failed to add profile_picture column. Check server logs for details.</p>");
+        }
+        
+        out.println("<p><a href='" + request.getContextPath() + "/profile'>Go to Profile Page</a></p>");
+        out.println("</body></html>");
+    }
+    
+    /**
+     * Add profile_picture column to users table if it doesn't exist
+     * @return true if successful, false otherwise
+     */
+    private boolean addProfilePictureColumn() {
+        try (Connection conn = DBUtil.getConnection()) {
+            if (conn == null) {
+                System.err.println("ERROR: Could not connect to database!");
+                return false;
+            }
+            
+            // Check if profile_picture column exists
+            boolean columnExists = false;
+            DatabaseMetaData metaData = conn.getMetaData();
+            try (ResultSet columns = metaData.getColumns(null, null, "users", "profile_picture")) {
+                columnExists = columns.next();
+            }
+            
+            if (columnExists) {
+                System.out.println("profile_picture column already exists in users table.");
+                return true;
+            }
+            
+            // Add profile_picture column
+            System.out.println("Adding profile_picture column to users table...");
+            try (Statement stmt = conn.createStatement()) {
+                String sql = "ALTER TABLE users ADD COLUMN profile_picture VARCHAR(255) DEFAULT NULL";
+                stmt.executeUpdate(sql);
+                System.out.println("profile_picture column added successfully!");
+                return true;
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error adding profile_picture column: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+}
