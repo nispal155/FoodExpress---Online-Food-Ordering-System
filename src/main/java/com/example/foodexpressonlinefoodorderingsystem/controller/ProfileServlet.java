@@ -25,6 +25,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import com.example.foodexpressonlinefoodorderingsystem.util.DBUtil;
+import com.example.foodexpressonlinefoodorderingsystem.util.UploadDirectoryChecker;
 
 /**
  * Servlet for handling user profile
@@ -44,6 +45,17 @@ public class ProfileServlet extends HttpServlet {
         super.init();
         // Check if profile_picture column exists and add it if it doesn't
         checkAndAddProfilePictureColumn();
+
+        // Check and create upload directory
+        String uploadPath = "/uploads/profile";
+        boolean directoryReady = UploadDirectoryChecker.checkAndCreateDirectory(getServletContext(), uploadPath);
+
+        if (directoryReady) {
+            System.out.println("Upload directory is ready: " + getServletContext().getRealPath(uploadPath));
+        } else {
+            System.err.println("WARNING: Upload directory could not be created or is not writable: " +
+                             getServletContext().getRealPath(uploadPath));
+        }
     }
 
     @Override
@@ -158,11 +170,17 @@ public class ProfileServlet extends HttpServlet {
             String uniqueFileName = System.currentTimeMillis() + "_" + user.getId() + "_" + fileName;
 
             // Create the upload directory if it doesn't exist
-            String uploadDir = getServletContext().getRealPath("/uploads/profile");
-            File uploadDirFile = new File(uploadDir);
-            if (!uploadDirFile.exists()) {
-                uploadDirFile.mkdirs();
+            String uploadPath = "/uploads/profile";
+            boolean directoryReady = UploadDirectoryChecker.checkAndCreateDirectory(getServletContext(), uploadPath);
+
+            if (!directoryReady) {
+                request.setAttribute("error", "Could not create or access upload directory. Please contact administrator.");
+                request.setAttribute("user", user);
+                request.getRequestDispatcher("/WEB-INF/views/profile.jsp").forward(request, response);
+                return;
             }
+
+            String uploadDir = getServletContext().getRealPath(uploadPath);
 
             // Save the file
             Path filePath = Paths.get(uploadDir, uniqueFileName);
