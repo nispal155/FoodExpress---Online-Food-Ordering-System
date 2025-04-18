@@ -262,4 +262,19 @@ public class EmailUtil {
     public static boolean isEmailEnabled() {
         return EMAIL_ENABLED;
     }
+
+    /**
+     * Get the current email configuration
+     * @return a Properties object containing the current email configuration
+     */
+    public static Properties getCurrentConfiguration() {
+        Properties props = new Properties();
+        props.setProperty("email.username", EMAIL_USERNAME);
+        props.setProperty("email.password", "********"); // Don't return the actual password
+        props.setProperty("email.host", EMAIL_HOST);
+        props.setProperty("email.port", String.valueOf(EMAIL_PORT));
+        props.setProperty("email.from", EMAIL_FROM);
+        props.setProperty("email.enabled", String.valueOf(EMAIL_ENABLED));
+        return props;
+    }
 }

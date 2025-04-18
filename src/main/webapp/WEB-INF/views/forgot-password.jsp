@@ -30,7 +30,9 @@
                                 border-radius: 5px; letter-spacing: 5px;">
                         ${verificationCode}
                     </div>
-                    <p class="mb-0">Please copy this code and use it to reset your password.</p>
+                    <p>Please copy this code and use it to reset your password.</p>
+                    <p class="mb-0"><i class="fas fa-info-circle"></i> <strong>Note:</strong> Email sending is currently disabled.
+                       <a href="${pageContext.request.contextPath}/setup-email" class="alert-link">Click here to enable email sending</a>.</p>
                 </div>
             </c:if>
 
