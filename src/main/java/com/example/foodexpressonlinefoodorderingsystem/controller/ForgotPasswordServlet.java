@@ -104,12 +104,24 @@ public class ForgotPasswordServlet extends HttpServlet {
         boolean emailSent = EmailUtil.sendVerificationCode(email, verificationCode);
 
         if (!emailSent) {
-            // Clear the verification code if email fails
-            userService.clearVerificationCode(email);
+            // If email sending is disabled or fails, show the code on screen
+            if (!EmailUtil.isEmailEnabled()) {
+                // Get the code from the cache
+                String cachedCode = EmailUtil.getVerificationCode(email);
 
-            request.setAttribute("error", "Failed to send verification email. Please try again.");
-            request.getRequestDispatcher("/WEB-INF/views/forgot-password.jsp").forward(request, response);
-            return;
+                request.setAttribute("showCode", true);
+                request.setAttribute("verificationCode", cachedCode);
+                request.setAttribute("message", "Email sending is disabled. Please use the verification code below.");
+            } else {
+                // Email sending is enabled but failed
+                request.setAttribute("error", "Failed to send verification email. Please try again or contact support.");
+
+                // Clear the verification code if email fails
+                userService.clearVerificationCode(email);
+
+                request.getRequestDispatcher("/WEB-INF/views/forgot-password.jsp").forward(request, response);
+                return;
+            }
         }
 
         // Store the email in session for the next step
