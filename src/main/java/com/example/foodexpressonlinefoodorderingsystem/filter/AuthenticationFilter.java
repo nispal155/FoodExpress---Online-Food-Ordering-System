@@ -117,7 +117,7 @@ public class AuthenticationFilter implements Filter {
      * @return true if the URL requires admin role, false otherwise
      */
     private boolean isAdminURL(String url) {
-        return ADMIN_URLS.stream().anyMatch(url::startsWith);
+        return url.startsWith("/admin");
     }
 
     /**
@@ -126,6 +126,6 @@ public class AuthenticationFilter implements Filter {
      * @return true if the URL requires delivery role, false otherwise
      */
     private boolean isDeliveryURL(String url) {
-        return DELIVERY_URLS.stream().anyMatch(url::startsWith);
+        return url.startsWith("/delivery");
     }
 }
