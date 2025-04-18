@@ -19,6 +19,8 @@ public class User {
     private boolean isActive;
     private String role; // "ADMIN", "CUSTOMER", "DELIVERY"
     private String profilePicture; // Path to profile picture
+    private String verificationCode;
+    private Date verificationCodeExpiry;
 
     // Default constructor
     public User() {
@@ -145,6 +147,22 @@ public class User {
 
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    public String getVerificationCode() {
+        return verificationCode;
+    }
+
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
+    }
+
+    public Date getVerificationCodeExpiry() {
+        return verificationCodeExpiry;
+    }
+
+    public void setVerificationCodeExpiry(Date verificationCodeExpiry) {
+        this.verificationCodeExpiry = verificationCodeExpiry;
     }
 
     @Override

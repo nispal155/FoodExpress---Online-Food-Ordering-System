@@ -13,7 +13,15 @@
             </div>
 
             <c:if test="${not empty error}">
-                <div class="alert alert-danger">${error}</div>
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle"></i> ${error}
+                </div>
+            </c:if>
+
+            <c:if test="${not empty message}">
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle"></i> ${message}
+                </div>
             </c:if>
 
             <form action="${pageContext.request.contextPath}/login" method="post">

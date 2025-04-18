@@ -5,6 +5,7 @@ import com.example.foodexpressonlinefoodorderingsystem.util.DBUtil;
 import com.example.foodexpressonlinefoodorderingsystem.util.PasswordUtil;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -445,6 +446,14 @@ public class UserService {
             // Ignore if the column doesn't exist
         }
 
+        // Get verification code fields if they exist in the result set
+        try {
+            user.setVerificationCode(rs.getString("verification_code"));
+            user.setVerificationCodeExpiry(rs.getTimestamp("verification_code_expiry"));
+        } catch (SQLException e) {
+            // Ignore if the columns don't exist
+        }
+
         return user;
     }
 
@@ -531,5 +540,92 @@ public class UserService {
         }
 
         return users;
+    }
+
+    /**
+     * Set a verification code for a user
+     * @param email the user's email
+     * @param verificationCode the verification code
+     * @param expiryMinutes minutes until the code expires
+     * @return true if successful, false otherwise
+     */
+    public boolean setVerificationCode(String email, String verificationCode, int expiryMinutes) {
+        String sql = "UPDATE users SET verification_code = ?, verification_code_expiry = ? " +
+                    "WHERE email = ?";
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            // Calculate expiry time
+            Timestamp expiryTime = Timestamp.valueOf(LocalDateTime.now().plusMinutes(expiryMinutes));
+
+            stmt.setString(1, verificationCode);
+            stmt.setTimestamp(2, expiryTime);
+            stmt.setString(3, email);
+
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            System.err.println("Error setting verification code: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Verify a verification code for a user
+     * @param email the user's email
+     * @param verificationCode the verification code to verify
+     * @return true if the code is valid and not expired, false otherwise
+     */
+    public boolean verifyVerificationCode(String email, String verificationCode) {
+        String sql = "SELECT verification_code, verification_code_expiry FROM users WHERE email = ?";
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                String storedCode = rs.getString("verification_code");
+                Timestamp expiryTime = rs.getTimestamp("verification_code_expiry");
+
+                // Check if code matches and is not expired
+                if (storedCode != null && storedCode.equals(verificationCode) &&
+                    expiryTime != null && expiryTime.after(new Timestamp(System.currentTimeMillis()))) {
+                    return true;
+                }
+            }
+
+            return false;
+
+        } catch (SQLException e) {
+            System.err.println("Error verifying verification code: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Clear a user's verification code
+     * @param email the user's email
+     * @return true if successful, false otherwise
+     */
+    public boolean clearVerificationCode(String email) {
+        String sql = "UPDATE users SET verification_code = NULL, verification_code_expiry = NULL " +
+                    "WHERE email = ?";
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, email);
+
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            System.err.println("Error clearing verification code: " + e.getMessage());
+            return false;
+        }
     }
 }
