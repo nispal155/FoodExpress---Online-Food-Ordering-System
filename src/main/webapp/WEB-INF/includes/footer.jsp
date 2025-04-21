@@ -1,4 +1,3 @@
-        </div>
     </main>
 
     <footer>
@@ -16,23 +15,24 @@
                         <li><a href="${pageContext.request.contextPath}/restaurants">Restaurants</a></li>
                         <li><a href="${pageContext.request.contextPath}/about">About Us</a></li>
                         <li><a href="${pageContext.request.contextPath}/contact">Contact</a></li>
+                        <li><a href="${pageContext.request.contextPath}/terms">Terms & Conditions</a></li>
                     </ul>
                 </div>
 
                 <div class="footer-section">
                     <h3>Contact Us</h3>
-                    <p><span class="icon-location"></span> 123 Food Street, Cuisine City</p>
-                    <p><span class="icon-phone"></span> (123) 456-7890</p>
-                    <p><span class="icon-envelope"></span> info@foodexpress.com</p>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Food Street, Cuisine City</p>
+                    <p><i class="fas fa-phone"></i> (123) 456-7890</p>
+                    <p><i class="fas fa-envelope"></i> info@foodexpress.com</p>
                 </div>
 
                 <div class="footer-section">
                     <h3>Follow Us</h3>
                     <div class="social-links">
-                        <a href="#">FB</a>
-                        <a href="#">TW</a>
-                        <a href="#">IG</a>
-                        <a href="#">LI</a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
                     </div>
                 </div>
             </div>
@@ -42,6 +42,9 @@
             </div>
         </div>
     </footer>
+
+    <!-- Custom JS instead of Bootstrap -->
+    <script src="${pageContext.request.contextPath}/js/custom-bootstrap.js"></script>
 
     <script>
         // Mobile menu toggle

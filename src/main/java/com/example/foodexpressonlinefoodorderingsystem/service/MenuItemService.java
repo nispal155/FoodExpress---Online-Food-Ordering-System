@@ -277,7 +277,7 @@ public class MenuItemService {
     }
 
     /**
-     * Search for menu items by name or description
+     * Search for menu items by name or description (for customers)
      * @param query the search query
      * @return List of menu items matching the search query
      */
@@ -308,6 +308,64 @@ public class MenuItemService {
 
         } catch (SQLException e) {
             System.err.println("Error searching menu items: " + e.getMessage());
+        }
+
+        return menuItems;
+    }
+
+    /**
+     * Search for menu items by name or description (for admin)
+     * @param query the search query
+     * @param restaurantId optional restaurant ID filter (0 for all restaurants)
+     * @param categoryId optional category ID filter (0 for all categories)
+     * @return List of menu items matching the search query and filters
+     */
+    public List<MenuItem> searchMenuItemsForAdmin(String query, int restaurantId, int categoryId) {
+        StringBuilder sqlBuilder = new StringBuilder(
+            "SELECT m.*, r.name AS restaurant_name, c.name AS category_name " +
+            "FROM menu_items m " +
+            "JOIN restaurants r ON m.restaurant_id = r.id " +
+            "JOIN categories c ON m.category_id = c.id " +
+            "WHERE (m.name LIKE ? OR m.description LIKE ?) "
+        );
+
+        if (restaurantId > 0) {
+            sqlBuilder.append("AND m.restaurant_id = ? ");
+        }
+
+        if (categoryId > 0) {
+            sqlBuilder.append("AND m.category_id = ? ");
+        }
+
+        sqlBuilder.append("ORDER BY r.name, c.name, m.name");
+
+        List<MenuItem> menuItems = new ArrayList<>();
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sqlBuilder.toString())) {
+
+            String searchPattern = "%" + query + "%";
+            stmt.setString(1, searchPattern);
+            stmt.setString(2, searchPattern);
+
+            int paramIndex = 3;
+
+            if (restaurantId > 0) {
+                stmt.setInt(paramIndex++, restaurantId);
+            }
+
+            if (categoryId > 0) {
+                stmt.setInt(paramIndex, categoryId);
+            }
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                menuItems.add(mapResultSetToMenuItem(rs));
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error searching menu items for admin: " + e.getMessage());
         }
 
         return menuItems;
@@ -445,6 +503,39 @@ public class MenuItemService {
         }
 
         return 0;
+    }
+
+    /**
+     * Get menu items for a specific order
+     * @param orderId the order ID
+     * @return List of menu items for the order
+     */
+    public List<MenuItem> getMenuItemsByOrderId(int orderId) {
+        String sql = "SELECT m.*, r.name AS restaurant_name, c.name AS category_name " +
+                     "FROM menu_items m " +
+                     "JOIN restaurants r ON m.restaurant_id = r.id " +
+                     "JOIN categories c ON m.category_id = c.id " +
+                     "JOIN order_items oi ON m.id = oi.menu_item_id " +
+                     "WHERE oi.order_id = ? " +
+                     "ORDER BY m.name";
+
+        List<MenuItem> menuItems = new ArrayList<>();
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, orderId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                menuItems.add(mapResultSetToMenuItem(rs));
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error getting menu items by order ID: " + e.getMessage());
+        }
+
+        return menuItems;
     }
 
     /**

@@ -1,53 +1,52 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <jsp:include page="/WEB-INF/includes/header.jsp">
     <jsp:param name="title" value="Food Express - Restaurants" />
 </jsp:include>
 
-<div class="container" style="padding: 2rem 0;">
-    <h1 style="margin-bottom: 2rem;">All Restaurants</h1>
-    
-    <!-- Search and Filter -->
-    <div style="margin-bottom: 2rem;">
-        <div class="row">
-            <div class="col-md-6">
-                <form action="${pageContext.request.contextPath}/search" method="get">
-                    <div style="display: flex;">
-                        <input type="text" name="q" placeholder="Search for food..." class="form-control" style="border-radius: 4px 0 0 4px;">
-                        <button type="submit" class="btn btn-primary" style="border-radius: 0 4px 4px 0;">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
-                </form>
-            </div>
-            <div class="col-md-6">
-                <div style="display: flex; justify-content: flex-end;">
-                    <select id="sortOrder" class="form-select" style="width: auto;" onchange="sortRestaurants()">
-                        <option value="rating">Sort by Rating</option>
-                        <option value="name">Sort by Name</option>
-                    </select>
-                </div>
-            </div>
+<!-- Include the restaurants CSS -->
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/restaurants.css">
+
+<div class="main-container">
+    <h1 class="page-title">All Restaurants</h1>
+
+    <!-- Search and Sort Section -->
+    <div class="search-sort-container">
+        <div class="search-container">
+            <form action="${pageContext.request.contextPath}/restaurants" method="get">
+                <input type="text" name="search" placeholder="Search for restaurants..." class="search-input" value="${param.search}">
+                <button type="submit" class="search-button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+        </div>
+
+        <div class="sort-container">
+            <select id="sortOrder" class="sort-select" onchange="sortRestaurants()">
+                <option value="rating">Sort by Rating</option>
+                <option value="name">Sort by Name</option>
+            </select>
         </div>
     </div>
-    
-    <!-- Restaurant List -->
-    <div class="row" id="restaurantList">
+
+    <!-- Restaurant Grid -->
+    <div class="restaurant-grid" id="restaurantList">
         <c:forEach var="restaurant" items="${restaurants}">
-            <div class="col-md-4 col-sm-6" style="margin-bottom: 2rem;" data-rating="${restaurant.rating}" data-name="${restaurant.name}">
-                <div class="card" style="height: 100%; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-                    <c:if test="${not empty restaurant.imageUrl}">
-                        <img src="${pageContext.request.contextPath}/${restaurant.imageUrl}" alt="${restaurant.name}" style="width: 100%; height: 200px; object-fit: cover;">
-                    </c:if>
-                    <c:if test="${empty restaurant.imageUrl}">
-                        <div style="width: 100%; height: 200px; background-color: #f5f5f5; display: flex; align-items: center; justify-content: center;">
-                            <i class="fas fa-utensils" style="font-size: 3rem; color: #ddd;"></i>
-                        </div>
-                    </c:if>
-                    <div style="padding: 1rem;">
-                        <h3 style="margin-bottom: 0.5rem;">${restaurant.name}</h3>
-                        <div style="margin-bottom: 0.5rem; color: var(--warning-color);">
+            <div class="restaurant-card" data-rating="${restaurant.rating}" data-name="${restaurant.name}">
+                <c:choose>
+                    <c:when test="${not empty restaurant.imageUrl}">
+                        <img src="${pageContext.request.contextPath}/${restaurant.imageUrl}" alt="${restaurant.name}" class="restaurant-image">
+                    </c:when>
+                    <c:otherwise>
+                        <div class="restaurant-image ${fn:contains(fn:toLowerCase(restaurant.name), 'pizza') ? 'pizza-image' : 'burger-image'}"></div>
+                    </c:otherwise>
+                </c:choose>
+                <div class="restaurant-content">
+                    <h3 class="restaurant-name">${restaurant.name}</h3>
+                    <div class="star-rating">
+                        <div class="stars">
                             <c:forEach begin="1" end="5" var="i">
                                 <c:choose>
                                     <c:when test="${i <= restaurant.rating}">
@@ -61,25 +60,18 @@
                                     </c:otherwise>
                                 </c:choose>
                             </c:forEach>
-                            <span style="color: var(--dark-gray); margin-left: 0.5rem;">${restaurant.rating}</span>
                         </div>
-                        <p style="margin-bottom: 0.5rem; color: var(--medium-gray);">
-                            <i class="fas fa-map-marker-alt"></i> ${restaurant.address}
-                        </p>
-                        <p style="margin-bottom: 1rem; color: var(--medium-gray); height: 48px; overflow: hidden;">
-                            ${restaurant.description}
-                        </p>
-                        <a href="${pageContext.request.contextPath}/restaurant?id=${restaurant.id}" class="btn btn-primary" style="width: 100%;">View Menu</a>
+                        <span class="rating-number">${restaurant.rating}</span>
                     </div>
+                    <p class="restaurant-description">${restaurant.description}</p>
+                    <a href="${pageContext.request.contextPath}/restaurant?id=${restaurant.id}" class="view-menu-button">View Menu</a>
                 </div>
             </div>
         </c:forEach>
-        
+
         <c:if test="${empty restaurants}">
-            <div class="col-12">
-                <div class="alert alert-info" role="alert">
-                    No restaurants available at the moment.
-                </div>
+            <div class="no-restaurants">
+                <p>No restaurants available at the moment.</p>
             </div>
         </c:if>
     </div>
@@ -90,7 +82,7 @@
         const sortOrder = document.getElementById('sortOrder').value;
         const restaurantList = document.getElementById('restaurantList');
         const restaurants = Array.from(restaurantList.children);
-        
+
         restaurants.sort((a, b) => {
             if (sortOrder === 'rating') {
                 return parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating);
@@ -99,7 +91,7 @@
             }
             return 0;
         });
-        
+
         restaurants.forEach(restaurant => {
             restaurantList.appendChild(restaurant);
         });

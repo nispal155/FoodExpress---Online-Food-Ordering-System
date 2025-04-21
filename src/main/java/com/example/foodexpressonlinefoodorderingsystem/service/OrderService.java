@@ -643,6 +643,14 @@ public class OrderService {
         order.setCreatedAt(rs.getTimestamp("created_at"));
         order.setUpdatedAt(rs.getTimestamp("updated_at"));
 
+        // Handle has_rated field
+        try {
+            order.setHasRated(rs.getBoolean("has_rated"));
+        } catch (SQLException e) {
+            // Column might not exist yet, default to false
+            order.setHasRated(false);
+        }
+
         // Set joined fields if available
         try {
             order.setCustomerName(rs.getString("customer_name"));

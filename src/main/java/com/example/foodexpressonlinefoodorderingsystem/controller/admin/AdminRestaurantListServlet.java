@@ -19,64 +19,74 @@ import java.util.List;
  */
 @WebServlet(name = "AdminRestaurantListServlet", urlPatterns = {"/admin/restaurants"})
 public class AdminRestaurantListServlet extends HttpServlet {
-    
+
     private final RestaurantService restaurantService = new RestaurantService();
-    
+
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         // Check if user is logged in and is an admin
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
-        
+
         User user = (User) session.getAttribute("user");
         if (!"ADMIN".equals(user.getRole())) {
             response.sendRedirect(request.getContextPath() + "/dashboard");
             return;
         }
-        
-        // Get all restaurants
-        List<Restaurant> restaurants = restaurantService.getAllRestaurants();
-        
+
+        // Get search parameter
+        String searchTerm = request.getParameter("search");
+        List<Restaurant> restaurants;
+
+        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+            // Search for restaurants matching the search term
+            restaurants = restaurantService.searchRestaurants(searchTerm.trim());
+            request.setAttribute("searchTerm", searchTerm);
+        } else {
+            // Get all restaurants
+            restaurants = restaurantService.getAllRestaurants();
+        }
+
         // Set attributes for the JSP
         request.setAttribute("restaurants", restaurants);
         request.setAttribute("pageTitle", "Manage Restaurants");
-        
+
         // Forward to the JSP
         request.getRequestDispatcher("/WEB-INF/views/admin/restaurants.jsp").forward(request, response);
     }
-    
+
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         // Check if user is logged in and is an admin
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
-        
+
         User user = (User) session.getAttribute("user");
         if (!"ADMIN".equals(user.getRole())) {
             response.sendRedirect(request.getContextPath() + "/dashboard");
             return;
         }
-        
+
         // Get action parameter
         String action = request.getParameter("action");
-        
+
         if ("toggle_active".equals(action)) {
             // Toggle restaurant active status
             int restaurantId = Integer.parseInt(request.getParameter("id"));
             boolean isActive = Boolean.parseBoolean(request.getParameter("isActive"));
-            
+
             boolean success = restaurantService.toggleRestaurantActive(restaurantId, isActive);
-            
+
             if (success) {
                 response.sendRedirect(request.getContextPath() + "/admin/restaurants?success=toggle_active");
             } else {
@@ -85,9 +95,9 @@ public class AdminRestaurantListServlet extends HttpServlet {
         } else if ("delete".equals(action)) {
             // Delete restaurant
             int restaurantId = Integer.parseInt(request.getParameter("id"));
-            
+
             boolean success = restaurantService.deleteRestaurant(restaurantId);
-            
+
             if (success) {
                 response.sendRedirect(request.getContextPath() + "/admin/restaurants?success=delete");
             } else {

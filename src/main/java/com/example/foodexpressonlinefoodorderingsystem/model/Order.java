@@ -81,6 +81,7 @@ public class Order {
     private Date actualDeliveryTime;
     private Date createdAt;
     private Date updatedAt;
+    private boolean hasRated;
 
     // For joining with other tables
     private String customerName;
@@ -245,6 +246,14 @@ public class Order {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public boolean isHasRated() {
+        return hasRated;
+    }
+
+    public void setHasRated(boolean hasRated) {
+        this.hasRated = hasRated;
     }
 
     public String getCustomerName() {

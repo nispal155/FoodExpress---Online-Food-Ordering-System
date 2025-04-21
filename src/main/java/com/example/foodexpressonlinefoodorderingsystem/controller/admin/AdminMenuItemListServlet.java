@@ -45,14 +45,20 @@ public class AdminMenuItemListServlet extends HttpServlet {
             return;
         }
 
-        // Check if filtering by restaurant
+        // Get filter parameters
         String restaurantIdStr = request.getParameter("restaurantId");
+        String categoryIdStr = request.getParameter("categoryId");
+        String searchQuery = request.getParameter("search");
+
         Restaurant restaurant = null;
+        int restaurantId = 0;
+        int categoryId = 0;
         List<MenuItem> menuItems;
 
+        // Parse restaurant ID if provided
         if (restaurantIdStr != null && !restaurantIdStr.isEmpty()) {
             try {
-                int restaurantId = Integer.parseInt(restaurantIdStr);
+                restaurantId = Integer.parseInt(restaurantIdStr);
                 restaurant = restaurantService.getRestaurantById(restaurantId);
 
                 if (restaurant == null) {
@@ -60,17 +66,39 @@ public class AdminMenuItemListServlet extends HttpServlet {
                     response.sendRedirect(request.getContextPath() + "/admin/restaurants?error=not_found");
                     return;
                 }
-
-                // Get menu items for this restaurant
-                menuItems = menuItemService.getMenuItemsByRestaurant(restaurantId);
-
             } catch (NumberFormatException e) {
                 // Invalid restaurant ID
                 response.sendRedirect(request.getContextPath() + "/admin/restaurants?error=invalid_id");
                 return;
             }
+        }
+
+        // Parse category ID if provided
+        if (categoryIdStr != null && !categoryIdStr.isEmpty()) {
+            try {
+                categoryId = Integer.parseInt(categoryIdStr);
+            } catch (NumberFormatException e) {
+                // Invalid category ID - just ignore it
+                categoryId = 0;
+            }
+        }
+
+        // Get menu items based on filters
+        if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+            // Search for menu items
+            menuItems = menuItemService.searchMenuItemsForAdmin(searchQuery.trim(), restaurantId, categoryId);
+            request.setAttribute("searchQuery", searchQuery);
+        } else if (restaurantId > 0 && categoryId > 0) {
+            // Filter by both restaurant and category
+            menuItems = menuItemService.getMenuItemsByRestaurantAndCategory(restaurantId, categoryId);
+        } else if (restaurantId > 0) {
+            // Filter by restaurant only
+            menuItems = menuItemService.getMenuItemsByRestaurant(restaurantId);
+        } else if (categoryId > 0) {
+            // Filter by category only
+            menuItems = menuItemService.getMenuItemsByCategory(categoryId);
         } else {
-            // Get all menu items
+            // No filters - get all menu items
             menuItems = menuItemService.getAllMenuItems();
         }
 
@@ -85,7 +113,25 @@ public class AdminMenuItemListServlet extends HttpServlet {
         request.setAttribute("restaurants", restaurants);
         request.setAttribute("categories", categories);
         request.setAttribute("selectedRestaurant", restaurant);
-        request.setAttribute("pageTitle", restaurant != null ? "Menu Items for " + restaurant.getName() : "All Menu Items");
+        request.setAttribute("selectedCategoryId", categoryId > 0 ? categoryId : null);
+
+        // Set page title based on filters
+        String pageTitle;
+        if (restaurant != null && categoryId > 0) {
+            Category category = categoryService.getCategoryById(categoryId);
+            pageTitle = "Menu Items for " + restaurant.getName() + " - " +
+                       (category != null ? category.getName() : "Category " + categoryId);
+        } else if (restaurant != null) {
+            pageTitle = "Menu Items for " + restaurant.getName();
+        } else if (categoryId > 0) {
+            Category category = categoryService.getCategoryById(categoryId);
+            pageTitle = "Menu Items - " + (category != null ? category.getName() : "Category " + categoryId);
+        } else if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+            pageTitle = "Search Results for '" + searchQuery + "'";
+        } else {
+            pageTitle = "All Menu Items";
+        }
+        request.setAttribute("pageTitle", pageTitle);
 
         // Forward to the JSP
         request.getRequestDispatcher("/WEB-INF/views/admin/menu-items.jsp").forward(request, response);

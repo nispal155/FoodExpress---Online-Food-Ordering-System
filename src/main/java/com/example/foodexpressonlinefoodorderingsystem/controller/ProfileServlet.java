@@ -94,13 +94,12 @@ public class ProfileServlet extends HttpServlet {
         User user = (User) session.getAttribute("user");
 
         // Get form parameters
+        String username = request.getParameter("username");
         String fullName = request.getParameter("fullName");
         String email = request.getParameter("email");
         String phone = request.getParameter("phone");
         String address = request.getParameter("address");
-        String currentPassword = request.getParameter("currentPassword");
-        String newPassword = request.getParameter("newPassword");
-        String confirmPassword = request.getParameter("confirmPassword");
+        // Password change fields removed
 
         // Validate input
         if (fullName == null || fullName.trim().isEmpty() ||
@@ -122,35 +121,16 @@ public class ProfileServlet extends HttpServlet {
         }
 
         // Update user information
+        // Make sure to preserve the username
+        if (username != null && !username.trim().isEmpty()) {
+            user.setUsername(username);
+        }
         user.setFullName(fullName);
         user.setEmail(email);
         user.setPhone(phone);
         user.setAddress(address);
 
-        // Handle password change if requested
-        if (currentPassword != null && !currentPassword.isEmpty() &&
-            newPassword != null && !newPassword.isEmpty() &&
-            confirmPassword != null && !confirmPassword.isEmpty()) {
-
-            // Verify current password
-            if (!userService.verifyPassword(user.getId(), currentPassword)) {
-                request.setAttribute("error", "Current password is incorrect");
-                request.setAttribute("user", user);
-                request.getRequestDispatcher("/WEB-INF/views/profile.jsp").forward(request, response);
-                return;
-            }
-
-            // Verify new password matches confirmation
-            if (!newPassword.equals(confirmPassword)) {
-                request.setAttribute("error", "New password and confirmation do not match");
-                request.setAttribute("user", user);
-                request.getRequestDispatcher("/WEB-INF/views/profile.jsp").forward(request, response);
-                return;
-            }
-
-            // Set new password
-            user.setPassword(newPassword);
-        }
+        // Password change functionality removed
 
         // Handle profile picture upload
         Part filePart = request.getPart("profilePicture");

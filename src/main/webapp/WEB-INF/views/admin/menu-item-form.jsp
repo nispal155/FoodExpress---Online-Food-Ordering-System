@@ -5,6 +5,8 @@
     <jsp:param name="title" value="Admin - ${pageTitle}" />
 </jsp:include>
 
+<!-- No Bootstrap imports needed as we're using custom CSS and JS -->
+
 <div class="row" style="margin-top: 2rem;">
     <div class="col-md-3 col-sm-12">
         <div class="card">
@@ -36,6 +38,11 @@
                     <li style="border-bottom: 1px solid var(--medium-gray);">
                         <a href="${pageContext.request.contextPath}/admin/orders" style="display: block; padding: 1rem; color: var(--dark-gray); text-decoration: none;">
                             <i class="fas fa-shopping-cart"></i> Orders
+                        </a>
+                    </li>
+                    <li style="border-bottom: 1px solid var(--medium-gray);">
+                        <a href="${pageContext.request.contextPath}/admin/reporting" style="display: block; padding: 1rem; color: var(--dark-gray); text-decoration: none;">
+                            <i class="fas fa-chart-bar"></i> Reports
                         </a>
                     </li>
                     <li>

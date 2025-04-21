@@ -5,50 +5,54 @@
     <jsp:param name="title" value="Admin - Menu Items" />
 </jsp:include>
 
-<div class="row" style="margin-top: 2rem;">
-    <div class="col-md-3 col-sm-12">
-        <div class="card">
-            <div class="card-header">
-                <h2 class="card-title">Admin Menu</h2>
-            </div>
-            <div style="padding: 0;">
-                <ul style="list-style: none; padding: 0; margin: 0;">
-                    <li style="border-bottom: 1px solid var(--medium-gray);">
-                        <a href="${pageContext.request.contextPath}/admin/dashboard" style="display: block; padding: 1rem; color: var(--dark-gray); text-decoration: none;">
-                            <i class="fas fa-tachometer-alt"></i> Dashboard
-                        </a>
-                    </li>
-                    <li style="border-bottom: 1px solid var(--medium-gray);">
-                        <a href="${pageContext.request.contextPath}/admin/users" style="display: block; padding: 1rem; color: var(--dark-gray); text-decoration: none;">
-                            <i class="fas fa-users"></i> Users
-                        </a>
-                    </li>
-                    <li style="border-bottom: 1px solid var(--medium-gray);">
-                        <a href="${pageContext.request.contextPath}/admin/restaurants" style="display: block; padding: 1rem; color: var(--dark-gray); text-decoration: none;">
-                            <i class="fas fa-utensils"></i> Restaurants
-                        </a>
-                    </li>
-                    <li style="border-bottom: 1px solid var(--medium-gray);">
-                        <a href="${pageContext.request.contextPath}/admin/menu-items" style="display: block; padding: 1rem; color: var(--primary-color); text-decoration: none; font-weight: bold; background-color: rgba(255, 87, 34, 0.1);">
-                            <i class="fas fa-hamburger"></i> Menu Items
-                        </a>
-                    </li>
-                    <li style="border-bottom: 1px solid var(--medium-gray);">
-                        <a href="${pageContext.request.contextPath}/admin/orders" style="display: block; padding: 1rem; color: var(--dark-gray); text-decoration: none;">
-                            <i class="fas fa-shopping-cart"></i> Orders
-                        </a>
-                    </li>
-                    <li>
-                        <a href="${pageContext.request.contextPath}/admin/settings" style="display: block; padding: 1rem; color: var(--dark-gray); text-decoration: none;">
-                            <i class="fas fa-cog"></i> Settings
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+<!-- Include the admin menu items CSS -->
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin-menu-items.css">
+
+<div class="admin-container">
+    <!-- Admin Sidebar -->
+    <div class="admin-sidebar">
+        <div class="admin-menu-title">Admin Menu</div>
+        <ul class="admin-menu">
+            <li>
+                <a href="${pageContext.request.contextPath}/admin/dashboard">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+            </li>
+            <li>
+                <a href="${pageContext.request.contextPath}/admin/users">
+                    <i class="fas fa-users"></i> Users
+                </a>
+            </li>
+            <li>
+                <a href="${pageContext.request.contextPath}/admin/restaurants">
+                    <i class="fas fa-utensils"></i> Restaurants
+                </a>
+            </li>
+            <li>
+                <a href="${pageContext.request.contextPath}/admin/menu-items" class="active">
+                    <i class="fas fa-hamburger"></i> Menu Items
+                </a>
+            </li>
+            <li>
+                <a href="${pageContext.request.contextPath}/admin/orders">
+                    <i class="fas fa-shopping-cart"></i> Orders
+                </a>
+            </li>
+            <li>
+                <a href="${pageContext.request.contextPath}/admin/reporting">
+                    <i class="fas fa-chart-bar"></i> Reports
+                </a>
+            </li>
+            <li>
+                <a href="${pageContext.request.contextPath}/admin/settings">
+                    <i class="fas fa-cog"></i> Settings
+                </a>
+            </li>
+        </ul>
     </div>
 
-    <div class="col-md-9 col-sm-12">
+    <!-- Admin Content -->
+    <div class="admin-content">
         <!-- Success and Error Messages -->
         <c:if test="${param.success != null}">
             <div class="alert alert-success" role="alert">
@@ -100,173 +104,205 @@
             </div>
         </c:if>
 
-        <div class="card">
-            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-                <h2 class="card-title">${pageTitle}</h2>
-                <div>
+        <!-- Menu Items Management Header -->
+        <div class="menu-items-management-header">
+            <h1>${pageTitle}</h1>
+            <div>
+                <c:if test="${not empty selectedRestaurant}">
+                    <a href="${pageContext.request.contextPath}/admin/menu-items/form?restaurantId=${selectedRestaurant.id}" class="add-menu-item-button">
+                        <i class="fas fa-plus"></i> Add Menu Item
+                    </a>
+                </c:if>
+                <c:if test="${empty selectedRestaurant}">
+                    <a href="${pageContext.request.contextPath}/admin/menu-items/form" class="add-menu-item-button">
+                        <i class="fas fa-plus"></i> Add Menu Item
+                    </a>
+                </c:if>
+            </div>
+        </div>
+
+        <!-- Search and Filter Section -->
+        <div class="search-filter-section">
+            <form action="${pageContext.request.contextPath}/admin/menu-items" method="get" class="filter-form">
+                <div class="filter-group">
+                    <label for="restaurantFilter" class="filter-label">Filter by Restaurant</label>
+                    <select class="filter-select" id="restaurantFilter" name="restaurantId">
+                        <option value="">All Restaurants</option>
+                        <c:forEach var="restaurant" items="${restaurants}">
+                            <option value="${restaurant.id}" ${selectedRestaurant != null && selectedRestaurant.id == restaurant.id ? 'selected' : ''}>
+                                ${restaurant.name}
+                            </option>
+                        </c:forEach>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="categoryFilter" class="filter-label">Filter by Category</label>
+                    <select class="filter-select" id="categoryFilter" name="categoryId">
+                        <option value="">All Categories</option>
+                        <option value="1" ${param.categoryId == '1' ? 'selected' : ''}>Pizza</option>
+                        <option value="2" ${param.categoryId == '2' ? 'selected' : ''}>Pasta</option>
+                        <option value="3" ${param.categoryId == '3' ? 'selected' : ''}>Burger</option>
+                        <option value="4" ${param.categoryId == '4' ? 'selected' : ''}>Dessert</option>
+                        <option value="5" ${param.categoryId == '5' ? 'selected' : ''}>Beverage</option>
+                    </select>
+                </div>
+
+                <div class="search-box">
+                    <label for="searchInput" class="filter-label">Search Menu Items</label>
+                    <div class="search-input-container">
+                        <input type="text" id="searchInput" name="search" class="search-input" placeholder="Search by name or description..." value="${param.search}">
+                        <button type="submit" class="search-button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="filter-group" style="flex: 0 0 auto;">
+                    <button type="submit" class="filter-button">Apply Filters</button>
+                </div>
+
+                <c:if test="${not empty selectedRestaurant || not empty param.categoryId || not empty param.search}">
+                    <div class="filter-group" style="flex: 0 0 auto;">
+                        <a href="${pageContext.request.contextPath}/admin/menu-items" class="clear-filter-button">Clear Filters</a>
+                    </div>
+                </c:if>
+            </form>
+        </div>
+
+        <!-- Menu Items Table -->
+        <div class="menu-items-table-container">
+            <table class="menu-items-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Restaurant</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th>Special</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:forEach var="menuItem" items="${menuItems}">
+                        <tr>
+                            <td>${menuItem.id}</td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${not empty menuItem.imageUrl}">
+                                        <img src="${pageContext.request.contextPath}/${menuItem.imageUrl}" alt="${menuItem.name}" class="menu-item-image">
+                                    </c:when>
+                                    <c:otherwise>
+                                        <div class="menu-item-image-placeholder">
+                                            <i class="fas fa-image"></i>
+                                        </div>
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
+                            <td><strong>${menuItem.name}</strong></td>
+                            <td>${menuItem.restaurantName}</td>
+                            <td>${menuItem.categoryName}</td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${menuItem.special && menuItem.discountPrice != null}">
+                                        <div class="menu-item-price">
+                                            <span class="regular-price">$<fmt:formatNumber value="${menuItem.price}" pattern="#,##0.00" /></span>
+                                            <span class="discount-price">$<fmt:formatNumber value="${menuItem.discountPrice}" pattern="#,##0.00" /></span>
+                                            <span class="discount-badge">-${menuItem.discountPercentage}%</span>
+                                        </div>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <div class="menu-item-price">
+                                            <span class="discount-price">$<fmt:formatNumber value="${menuItem.price}" pattern="#,##0.00" /></span>
+                                        </div>
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
+                            <td>
+                                <span class="status-badge ${menuItem.available ? 'status-available' : 'status-unavailable'}">
+                                    ${menuItem.available ? 'Available' : 'Unavailable'}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="status-badge ${menuItem.special ? 'status-special' : 'status-regular'}">
+                                    ${menuItem.special ? 'Special' : 'Regular'}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="menu-item-actions">
+                                    <a href="${pageContext.request.contextPath}/admin/menu-items/form?id=${menuItem.id}" class="action-button edit-button" title="Edit Menu Item">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <button type="button" class="action-button delete-button" title="Delete Menu Item" onclick="confirmDelete(${menuItem.id}, '${menuItem.name}')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                    <div class="dropdown">
+                                        <button class="action-button settings-button" type="button" id="dropdownMenuButton${menuItem.id}" data-bs-toggle="dropdown" aria-expanded="false" title="More Actions">
+                                            <i class="fas fa-cog"></i>
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton${menuItem.id}">
+                                            <c:choose>
+                                                <c:when test="${menuItem.available}">
+                                                    <li>
+                                                        <a class="dropdown-item" href="#" onclick="toggleAvailable(${menuItem.id}, false)">
+                                                            <i class="fas fa-times-circle text-danger"></i> Mark as Unavailable
+                                                        </a>
+                                                    </li>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <li>
+                                                        <a class="dropdown-item" href="#" onclick="toggleAvailable(${menuItem.id}, true)">
+                                                            <i class="fas fa-check-circle text-success"></i> Mark as Available
+                                                        </a>
+                                                    </li>
+                                                </c:otherwise>
+                                            </c:choose>
+                                            <c:choose>
+                                                <c:when test="${menuItem.special}">
+                                                    <li>
+                                                        <a class="dropdown-item" href="#" onclick="toggleSpecial(${menuItem.id}, false)">
+                                                            <i class="fas fa-star text-warning"></i> Remove Special Status
+                                                        </a>
+                                                    </li>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <li>
+                                                        <a class="dropdown-item" href="#" onclick="markAsSpecial(${menuItem.id}, ${menuItem.price})">
+                                                            <i class="fas fa-star text-warning"></i> Mark as Special
+                                                        </a>
+                                                    </li>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </tbody>
+            </table>
+
+            <c:if test="${empty menuItems}">
+                <div class="empty-state">
+                    <i class="fas fa-hamburger"></i>
+                    <h3>No Menu Items Found</h3>
+                    <p>There are no menu items matching your search criteria.</p>
                     <c:if test="${not empty selectedRestaurant}">
-                        <a href="${pageContext.request.contextPath}/admin/menu-items/form?restaurantId=${selectedRestaurant.id}" class="btn btn-primary">
+                        <a href="${pageContext.request.contextPath}/admin/menu-items/form?restaurantId=${selectedRestaurant.id}" class="add-menu-item-button">
                             <i class="fas fa-plus"></i> Add Menu Item
                         </a>
                     </c:if>
                     <c:if test="${empty selectedRestaurant}">
-                        <a href="${pageContext.request.contextPath}/admin/menu-items/form" class="btn btn-primary">
+                        <a href="${pageContext.request.contextPath}/admin/menu-items/form" class="add-menu-item-button">
                             <i class="fas fa-plus"></i> Add Menu Item
                         </a>
                     </c:if>
                 </div>
-            </div>
-            <div style="padding: 1rem;">
-                <!-- Restaurant Filter -->
-                <div class="mb-4">
-                    <form action="${pageContext.request.contextPath}/admin/menu-items" method="get" class="row g-3 align-items-end">
-                        <div class="col-md-4">
-                            <label for="restaurantFilter" class="form-label">Filter by Restaurant</label>
-                            <select class="form-select" id="restaurantFilter" name="restaurantId">
-                                <option value="">All Restaurants</option>
-                                <c:forEach var="restaurant" items="${restaurants}">
-                                    <option value="${restaurant.id}" ${selectedRestaurant != null && selectedRestaurant.id == restaurant.id ? 'selected' : ''}>
-                                        ${restaurant.name}
-                                    </option>
-                                </c:forEach>
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <button type="submit" class="btn btn-primary w-100">Apply Filter</button>
-                        </div>
-                        <c:if test="${not empty selectedRestaurant}">
-                            <div class="col-md-2">
-                                <a href="${pageContext.request.contextPath}/admin/menu-items" class="btn btn-outline-secondary w-100">Clear Filter</a>
-                            </div>
-                        </c:if>
-                    </form>
-                </div>
-
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Image</th>
-                                <th>Name</th>
-                                <th>Restaurant</th>
-                                <th>Category</th>
-                                <th>Price</th>
-                                <th>Status</th>
-                                <th>Special</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <c:forEach var="menuItem" items="${menuItems}">
-                                <tr>
-                                    <td>${menuItem.id}</td>
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${not empty menuItem.imageUrl}">
-                                                <img src="${pageContext.request.contextPath}/${menuItem.imageUrl}" alt="${menuItem.name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
-                                            </c:when>
-                                            <c:otherwise>
-                                                <div style="width: 50px; height: 50px; background-color: #f0f0f0; border-radius: 5px; display: flex; align-items: center; justify-content: center;">
-                                                    <i class="fas fa-image" style="color: #aaa;"></i>
-                                                </div>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                    <td>${menuItem.name}</td>
-                                    <td>${menuItem.restaurantName}</td>
-                                    <td>${menuItem.categoryName}</td>
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${menuItem.special && menuItem.discountPrice != null}">
-                                                <span style="text-decoration: line-through; color: var(--dark-gray);">$<fmt:formatNumber value="${menuItem.price}" pattern="#,##0.00" /></span>
-                                                <span style="color: var(--primary-color); font-weight: bold;">$<fmt:formatNumber value="${menuItem.discountPrice}" pattern="#,##0.00" /></span>
-                                                <span style="background-color: var(--primary-color); color: white; padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.8rem; margin-left: 0.3rem;">-${menuItem.discountPercentage}%</span>
-                                            </c:when>
-                                            <c:otherwise>
-                                                $<fmt:formatNumber value="${menuItem.price}" pattern="#,##0.00" />
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${menuItem.available}">
-                                                <span style="background-color: rgba(76, 175, 80, 0.1); color: var(--success-color); padding: 0.25rem 0.5rem; border-radius: 4px;">Available</span>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <span style="background-color: rgba(244, 67, 54, 0.1); color: var(--danger-color); padding: 0.25rem 0.5rem; border-radius: 4px;">Unavailable</span>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${menuItem.special}">
-                                                <span style="background-color: rgba(255, 193, 7, 0.1); color: var(--warning-color); padding: 0.25rem 0.5rem; border-radius: 4px;">Special</span>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <span style="background-color: rgba(158, 158, 158, 0.1); color: var(--dark-gray); padding: 0.25rem 0.5rem; border-radius: 4px;">Regular</span>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                    <td>
-                                        <div class="btn-group">
-                                            <a href="${pageContext.request.contextPath}/admin/menu-items/form?id=${menuItem.id}" class="btn btn-sm btn-secondary" title="Edit">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <button type="button" class="btn btn-sm btn-danger" title="Delete" onclick="confirmDelete(${menuItem.id}, '${menuItem.name}')">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                            <div class="dropdown">
-                                                <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton${menuItem.id}" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i class="fas fa-cog"></i>
-                                                </button>
-                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton${menuItem.id}">
-                                                    <c:choose>
-                                                        <c:when test="${menuItem.available}">
-                                                            <li>
-                                                                <a class="dropdown-item" href="#" onclick="toggleAvailable(${menuItem.id}, false)">
-                                                                    <i class="fas fa-times-circle"></i> Mark as Unavailable
-                                                                </a>
-                                                            </li>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <li>
-                                                                <a class="dropdown-item" href="#" onclick="toggleAvailable(${menuItem.id}, true)">
-                                                                    <i class="fas fa-check-circle"></i> Mark as Available
-                                                                </a>
-                                                            </li>
-                                                        </c:otherwise>
-                                                    </c:choose>
-                                                    <c:choose>
-                                                        <c:when test="${menuItem.special}">
-                                                            <li>
-                                                                <a class="dropdown-item" href="#" onclick="toggleSpecial(${menuItem.id}, false)">
-                                                                    <i class="fas fa-star"></i> Remove Special Status
-                                                                </a>
-                                                            </li>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <li>
-                                                                <a class="dropdown-item" href="#" onclick="markAsSpecial(${menuItem.id}, ${menuItem.price})">
-                                                                    <i class="fas fa-star"></i> Mark as Special
-                                                                </a>
-                                                            </li>
-                                                        </c:otherwise>
-                                                    </c:choose>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </c:forEach>
-                            <c:if test="${empty menuItems}">
-                                <tr>
-                                    <td colspan="9" style="text-align: center;">No menu items found</td>
-                                </tr>
-                            </c:if>
-                        </tbody>
-                    </table>
-                </div>
+            </c:if>
+        </div>
             </div>
         </div>
     </div>
@@ -294,36 +330,36 @@
 <!-- Special Discount Modal -->
 <div class="modal fade" id="specialModal" tabindex="-1" aria-labelledby="specialModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="specialModalLabel">Set Special Price</h5>
+        <div class="modal-content" style="border-radius: 8px; overflow: hidden;">
+            <div class="modal-header special-modal-header">
+                <h5 class="modal-title" id="specialModalLabel" style="font-weight: 600;">Set Special Price</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="specialForm" action="${pageContext.request.contextPath}/admin/menu-items/toggle" method="get">
-                <div class="modal-body">
+                <div class="modal-body special-modal-body">
                     <input type="hidden" id="specialMenuItemId" name="id">
                     <input type="hidden" name="action" value="special">
                     <input type="hidden" name="value" value="true">
 
-                    <div class="mb-3">
+                    <div class="form-group">
                         <label for="regularPrice" class="form-label">Regular Price</label>
                         <input type="text" class="form-control" id="regularPrice" readonly>
                     </div>
 
-                    <div class="mb-3">
+                    <div class="form-group">
                         <label for="discountPrice" class="form-label">Special Price</label>
                         <input type="number" class="form-control" id="discountPrice" name="discountPrice" step="0.01" min="0.01" required>
                         <div class="form-text">Enter the special discounted price (must be less than the regular price).</div>
                     </div>
 
-                    <div class="mb-3">
+                    <div class="form-group">
                         <label for="discountPercentage" class="form-label">Discount Percentage</label>
                         <input type="text" class="form-control" id="discountPercentage" readonly>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
+                <div class="modal-footer special-modal-footer">
+                    <button type="button" class="cancel-button" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="save-button">Save Special Price</button>
                 </div>
             </form>
         </div>
@@ -407,18 +443,21 @@
 <!-- Delete Confirmation Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content" style="border-radius: 8px; overflow: hidden;">
+            <div class="modal-header delete-modal-header">
+                <h5 class="modal-title" id="deleteModalLabel" style="font-weight: 600;">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="filter: invert(1);"></button>
             </div>
-            <div class="modal-body">
-                <p>Are you sure you want to delete the menu item "<span id="deleteMenuItemName"></span>"?</p>
-                <p class="text-danger">This action cannot be undone!</p>
+            <div class="modal-body delete-modal-body">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <i class="fas fa-exclamation-triangle delete-modal-icon"></i>
+                    <p style="font-size: 16px; margin-bottom: 0;">Are you sure you want to delete menu item <span id="deleteMenuItemName" class="delete-modal-menu-item-name"></span>?</p>
+                    <p class="delete-modal-warning">This action cannot be undone.</p>
+                </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger" onclick="deleteMenuItem()">Delete</button>
+            <div class="modal-footer delete-modal-footer">
+                <button type="button" class="cancel-button" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="confirm-delete-button" onclick="deleteMenuItem()">Delete Menu Item</button>
             </div>
         </div>
     </div>

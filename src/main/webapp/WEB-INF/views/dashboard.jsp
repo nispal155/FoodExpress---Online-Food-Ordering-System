@@ -12,7 +12,14 @@
             </div>
             <div class="user-info" style="padding: 1rem;">
                 <div style="text-align: center; margin-bottom: 1.5rem;">
-                    <img src="https://ui-avatars.com/api/?name=${user.fullName}&background=FF5722&color=fff&size=100" alt="${user.fullName}" style="border-radius: 50%;">
+                    <c:choose>
+                        <c:when test="${not empty user.profilePicture}">
+                            <img src="${pageContext.request.contextPath}${user.profilePicture}" alt="${user.fullName}" style="border-radius: 50%; width: 100px; height: 100px; object-fit: cover;">
+                        </c:when>
+                        <c:otherwise>
+                            <img src="https://ui-avatars.com/api/?name=${user.fullName}&background=FF5722&color=fff&size=100" alt="${user.fullName}" style="border-radius: 50%;">
+                        </c:otherwise>
+                    </c:choose>
                     <h3 style="margin-top: 0.5rem;">${user.fullName}</h3>
                     <p style="color: var(--primary-color);">${user.role}</p>
                 </div>

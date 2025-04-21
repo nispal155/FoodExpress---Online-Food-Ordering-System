@@ -29,6 +29,9 @@
                 </div>
                 <div class="card-body">
                     <form action="${pageContext.request.contextPath}/profile" method="post" enctype="multipart/form-data">
+                        <!-- Hidden username field to ensure it's submitted with the form -->
+                        <input type="hidden" name="username" value="${user.username}">
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
@@ -66,31 +69,7 @@
                             </div>
                         </div>
 
-                        <h3 style="margin-top: 1.5rem;">Change Password</h3>
-                        <p class="text-muted">Leave blank if you don't want to change your password</p>
 
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="currentPassword" class="form-label">Current Password</label>
-                                    <input type="password" class="form-control" id="currentPassword" name="currentPassword">
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="newPassword" class="form-label">New Password</label>
-                                    <input type="password" class="form-control" id="newPassword" name="newPassword">
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="confirmPassword" class="form-label">Confirm Password</label>
-                                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
-                                </div>
-                            </div>
-                        </div>
 
                         <button type="submit" class="btn btn-primary">
                             <i class="fas fa-save"></i> Save Changes
@@ -121,7 +100,7 @@
                         </c:choose>
                     </div>
 
-                    <form action="${pageContext.request.contextPath}/upload-profile-picture" method="post" enctype="multipart/form-data">
+                    <form action="${pageContext.request.contextPath}/profile-picture-upload" method="post" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="profilePicture" class="form-label">Upload New Picture</label>
                             <input type="file" class="form-control" id="profilePicture" name="profilePicture" accept="image/*">

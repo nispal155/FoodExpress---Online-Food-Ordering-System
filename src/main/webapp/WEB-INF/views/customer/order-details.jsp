@@ -19,14 +19,21 @@
             </c:choose>
         </div>
     </c:if>
-    
+
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
         <h1>Order #${order.id}</h1>
-        <a href="${pageContext.request.contextPath}/orders" class="btn btn-outline-primary">
-            <i class="fas fa-arrow-left"></i> Back to Orders
-        </a>
+        <div>
+            <c:if test="${order.status == 'DELIVERED' && !order.hasRated}">
+                <a href="${pageContext.request.contextPath}/rate-order?orderId=${order.id}" class="btn btn-success" style="margin-right: 10px;">
+                    <i class="fas fa-star"></i> Rate Order
+                </a>
+            </c:if>
+            <a href="${pageContext.request.contextPath}/orders" class="btn btn-outline-primary">
+                <i class="fas fa-arrow-left"></i> Back to Orders
+            </a>
+        </div>
     </div>
-    
+
     <div class="row">
         <!-- Order Details -->
         <div class="col-md-8">
@@ -53,7 +60,7 @@
                             </c:if>
                         </div>
                     </div>
-                    
+
                     <div class="mb-3">
                         <h5>Delivery Information</h5>
                         <p><strong>Address:</strong> ${order.deliveryAddress}</p>
@@ -65,10 +72,10 @@
                             <p><strong>Delivery Person:</strong> ${order.deliveryPersonName}</p>
                         </c:if>
                     </div>
-                    
+
                     <c:if test="${order.status == 'PENDING' || order.status == 'CONFIRMED'}">
                         <div style="margin-top: 1.5rem;">
-                            <form action="${pageContext.request.contextPath}/orders/cancel/${order.id}" method="post" 
+                            <form action="${pageContext.request.contextPath}/orders/cancel/${order.id}" method="post"
                                   onsubmit="return confirm('Are you sure you want to cancel this order?');">
                                 <button type="submit" class="btn btn-danger">
                                     <i class="fas fa-times-circle"></i> Cancel Order
@@ -79,7 +86,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Order Summary -->
         <div class="col-md-4">
             <div class="card mb-4">
@@ -100,21 +107,21 @@
                             </div>
                         </c:forEach>
                     </div>
-                    
+
                     <hr>
-                    
+
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
                         <span>Subtotal:</span>
                         <span>$<fmt:formatNumber value="${order.totalAmount}" pattern="#,##0.00" /></span>
                     </div>
-                    
+
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-weight: bold;">
                         <span>Total:</span>
                         <span>$<fmt:formatNumber value="${order.totalAmount}" pattern="#,##0.00" /></span>
                     </div>
                 </div>
             </div>
-            
+
             <!-- Order Tracking -->
             <div class="card">
                 <div class="card-header">
@@ -129,35 +136,35 @@
                                 <p><fmt:formatDate value="${order.orderDate}" pattern="MMM dd, yyyy HH:mm" /></p>
                             </div>
                         </div>
-                        
+
                         <div class="timeline-item ${order.status == 'CONFIRMED' || order.status == 'PREPARING' || order.status == 'READY' || order.status == 'OUT_FOR_DELIVERY' || order.status == 'DELIVERED' ? 'active' : ''}">
                             <div class="timeline-marker"></div>
                             <div class="timeline-content">
                                 <h3 class="timeline-title">Order Confirmed</h3>
                             </div>
                         </div>
-                        
+
                         <div class="timeline-item ${order.status == 'PREPARING' || order.status == 'READY' || order.status == 'OUT_FOR_DELIVERY' || order.status == 'DELIVERED' ? 'active' : ''}">
                             <div class="timeline-marker"></div>
                             <div class="timeline-content">
                                 <h3 class="timeline-title">Preparing</h3>
                             </div>
                         </div>
-                        
+
                         <div class="timeline-item ${order.status == 'READY' || order.status == 'OUT_FOR_DELIVERY' || order.status == 'DELIVERED' ? 'active' : ''}">
                             <div class="timeline-marker"></div>
                             <div class="timeline-content">
                                 <h3 class="timeline-title">Ready for Pickup</h3>
                             </div>
                         </div>
-                        
+
                         <div class="timeline-item ${order.status == 'OUT_FOR_DELIVERY' || order.status == 'DELIVERED' ? 'active' : ''}">
                             <div class="timeline-marker"></div>
                             <div class="timeline-content">
                                 <h3 class="timeline-title">Out for Delivery</h3>
                             </div>
                         </div>
-                        
+
                         <div class="timeline-item ${order.status == 'DELIVERED' ? 'active' : ''}">
                             <div class="timeline-marker"></div>
                             <div class="timeline-content">
@@ -180,7 +187,7 @@
         padding-left: 1.5rem;
         margin-bottom: 1rem;
     }
-    
+
     .timeline:before {
         content: '';
         position: absolute;
@@ -190,12 +197,12 @@
         width: 2px;
         background-color: #e0e0e0;
     }
-    
+
     .timeline-item {
         position: relative;
         padding-bottom: 1.5rem;
     }
-    
+
     .timeline-marker {
         position: absolute;
         left: -1.5rem;
@@ -205,20 +212,20 @@
         background-color: #e0e0e0;
         border: 2px solid white;
     }
-    
+
     .timeline-item.active .timeline-marker {
         background-color: var(--primary-color);
     }
-    
+
     .timeline-content {
         padding-left: 0.5rem;
     }
-    
+
     .timeline-title {
         font-size: 1rem;
         margin-bottom: 0.25rem;
     }
-    
+
     .timeline-content p {
         font-size: 0.875rem;
         color: var(--medium-gray);

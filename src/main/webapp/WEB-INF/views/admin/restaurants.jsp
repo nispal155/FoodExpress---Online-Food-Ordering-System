@@ -5,55 +5,54 @@
     <jsp:param name="title" value="Admin - ${pageTitle}" />
 </jsp:include>
 
-<div class="row" style="margin-top: 2rem;">
-    <div class="col-md-3 col-sm-12">
-        <div class="card">
-            <div class="card-header">
-                <h2 class="card-title">Admin Menu</h2>
-            </div>
-            <div style="padding: 0;">
-                <ul style="list-style: none; padding: 0; margin: 0;">
-                    <li style="border-bottom: 1px solid var(--medium-gray);">
-                        <a href="${pageContext.request.contextPath}/admin/dashboard" style="display: block; padding: 1rem; color: var(--dark-gray); text-decoration: none;">
-                            <i class="fas fa-tachometer-alt"></i> Dashboard
-                        </a>
-                    </li>
-                    <li style="border-bottom: 1px solid var(--medium-gray);">
-                        <a href="${pageContext.request.contextPath}/admin/users" style="display: block; padding: 1rem; color: var(--dark-gray); text-decoration: none;">
-                            <i class="fas fa-users"></i> Users
-                        </a>
-                    </li>
-                    <li style="border-bottom: 1px solid var(--medium-gray);">
-                        <a href="${pageContext.request.contextPath}/admin/restaurants" style="display: block; padding: 1rem; color: var(--primary-color); text-decoration: none; font-weight: bold; background-color: rgba(255, 87, 34, 0.1);">
-                            <i class="fas fa-utensils"></i> Restaurants
-                        </a>
-                    </li>
-                    <li style="border-bottom: 1px solid var(--medium-gray);">
-                        <a href="${pageContext.request.contextPath}/admin/menu-items" style="display: block; padding: 1rem; color: var(--dark-gray); text-decoration: none;">
-                            <i class="fas fa-hamburger"></i> Menu Items
-                        </a>
-                    </li>
-                    <li style="border-bottom: 1px solid var(--medium-gray);">
-                        <a href="${pageContext.request.contextPath}/admin/orders" style="display: block; padding: 1rem; color: var(--dark-gray); text-decoration: none;">
-                            <i class="fas fa-shopping-cart"></i> Orders
-                        </a>
-                    </li>
-                    <li style="border-bottom: 1px solid var(--medium-gray);">
-                        <a href="${pageContext.request.contextPath}/admin/reporting" style="display: block; padding: 1rem; color: var(--dark-gray); text-decoration: none;">
-                            <i class="fas fa-chart-bar"></i> Reports
-                        </a>
-                    </li>
-                    <li>
-                        <a href="${pageContext.request.contextPath}/admin/settings" style="display: block; padding: 1rem; color: var(--dark-gray); text-decoration: none;">
-                            <i class="fas fa-cog"></i> Settings
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+<!-- Include the admin restaurants CSS -->
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin-restaurants.css">
+
+<div class="admin-container">
+    <!-- Admin Sidebar -->
+    <div class="admin-sidebar">
+        <div class="admin-menu-title">Admin Menu</div>
+        <ul class="admin-menu">
+            <li>
+                <a href="${pageContext.request.contextPath}/admin/dashboard">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+            </li>
+            <li>
+                <a href="${pageContext.request.contextPath}/admin/users">
+                    <i class="fas fa-users"></i> Users
+                </a>
+            </li>
+            <li>
+                <a href="${pageContext.request.contextPath}/admin/restaurants" class="active">
+                    <i class="fas fa-utensils"></i> Restaurants
+                </a>
+            </li>
+            <li>
+                <a href="${pageContext.request.contextPath}/admin/menu-items">
+                    <i class="fas fa-hamburger"></i> Menu Items
+                </a>
+            </li>
+            <li>
+                <a href="${pageContext.request.contextPath}/admin/orders">
+                    <i class="fas fa-shopping-cart"></i> Orders
+                </a>
+            </li>
+            <li>
+                <a href="${pageContext.request.contextPath}/admin/reporting">
+                    <i class="fas fa-chart-bar"></i> Reports
+                </a>
+            </li>
+            <li>
+                <a href="${pageContext.request.contextPath}/admin/settings">
+                    <i class="fas fa-cog"></i> Settings
+                </a>
+            </li>
+        </ul>
     </div>
-    
-    <div class="col-md-9 col-sm-12">
+
+    <!-- Admin Content -->
+    <div class="admin-content">
         <!-- Success and Error Messages -->
         <c:if test="${param.success != null}">
             <div class="alert alert-success" role="alert">
@@ -76,7 +75,7 @@
                 </c:choose>
             </div>
         </c:if>
-        
+
         <c:if test="${param.error != null}">
             <div class="alert alert-danger" role="alert">
                 <c:choose>
@@ -107,17 +106,32 @@
                 </c:choose>
             </div>
         </c:if>
-        
-        <div class="card">
-            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-                <h2 class="card-title">Restaurants</h2>
-                <a href="${pageContext.request.contextPath}/admin/restaurants/form" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Add Restaurant
-                </a>
+
+        <!-- Restaurant Management Header -->
+        <div class="restaurant-management-header">
+            <h1>Restaurant Management</h1>
+            <a href="${pageContext.request.contextPath}/admin/restaurants/form" class="add-restaurant-button">
+                <i class="fas fa-plus"></i> Add Restaurant
+            </a>
+        </div>
+
+        <!-- Search and Filter Section -->
+        <div class="search-filter-section">
+            <div class="search-box">
+                <form action="${pageContext.request.contextPath}/admin/restaurants" method="get" style="display: flex; width: 100%;">
+                    <div style="display: flex; width: 100%;">
+                        <input type="text" name="search" class="search-input" placeholder="Search restaurants by name or address..." value="${param.search}">
+                        <button type="submit" class="search-button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
             </div>
-            <div style="padding: 1rem;">
-                <div class="table-responsive">
-                    <table class="table table-striped">
+        </div>
+
+        <!-- Restaurants Table -->
+        <div class="restaurants-table-container">
+                    <table class="restaurants-table">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -136,21 +150,21 @@
                                     <td>
                                         <c:choose>
                                             <c:when test="${not empty restaurant.imageUrl}">
-                                                <img src="${pageContext.request.contextPath}/${restaurant.imageUrl}" alt="${restaurant.name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
+                                                <img src="${pageContext.request.contextPath}/${restaurant.imageUrl}" alt="${restaurant.name}" class="restaurant-image">
                                             </c:when>
                                             <c:otherwise>
-                                                <div style="width: 50px; height: 50px; background-color: #f0f0f0; display: flex; align-items: center; justify-content: center; border-radius: 5px;">
-                                                    <i class="fas fa-utensils" style="color: #aaa;"></i>
+                                                <div class="restaurant-image-placeholder">
+                                                    <i class="fas fa-utensils"></i>
                                                 </div>
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
-                                    <td>${restaurant.name}</td>
+                                    <td><strong>${restaurant.name}</strong></td>
                                     <td>${restaurant.address}</td>
                                     <td>
-                                        <div style="display: flex; align-items: center;">
-                                            <span style="margin-right: 0.5rem;">${restaurant.rating}</span>
-                                            <div style="color: var(--warning-color);">
+                                        <div class="restaurant-rating">
+                                            <span class="rating-value">${restaurant.rating}</span>
+                                            <div class="rating-stars">
                                                 <c:forEach begin="1" end="5" var="i">
                                                     <c:choose>
                                                         <c:when test="${restaurant.rating >= i}">
@@ -168,39 +182,45 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="badge ${restaurant.active ? 'bg-success' : 'bg-danger'}">
+                                        <span class="status-badge ${restaurant.active ? 'status-active' : 'status-inactive'}">
                                             ${restaurant.active ? 'Active' : 'Inactive'}
                                         </span>
                                     </td>
                                     <td>
-                                        <div class="btn-group" role="group">
-                                            <a href="${pageContext.request.contextPath}/admin/restaurants/form?id=${restaurant.id}" class="btn btn-sm btn-primary" title="Edit">
+                                        <div class="restaurant-actions">
+                                            <a href="${pageContext.request.contextPath}/admin/restaurants/form?id=${restaurant.id}" class="action-button edit-button" title="Edit Restaurant">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <a href="${pageContext.request.contextPath}/admin/menu-items?restaurantId=${restaurant.id}" class="btn btn-sm btn-info" title="Menu Items">
+                                            <a href="${pageContext.request.contextPath}/admin/menu-items?restaurantId=${restaurant.id}" class="action-button menu-button" title="Manage Menu Items">
                                                 <i class="fas fa-hamburger"></i>
                                             </a>
-                                            <button type="button" class="btn btn-sm ${restaurant.active ? 'btn-warning' : 'btn-success'}" 
-                                                    onclick="toggleActive(${restaurant.id}, ${!restaurant.active})" 
-                                                    title="${restaurant.active ? 'Deactivate' : 'Activate'}">
+                                            <button type="button" class="action-button toggle-button ${!restaurant.active ? 'activate' : ''}"
+                                                    onclick="toggleActive(${restaurant.id}, ${!restaurant.active})"
+                                                    title="${restaurant.active ? 'Deactivate' : 'Activate'} Restaurant">
                                                 <i class="fas ${restaurant.active ? 'fa-ban' : 'fa-check'}"></i>
                                             </button>
-                                            <button type="button" class="btn btn-sm btn-danger" 
-                                                    onclick="confirmDelete(${restaurant.id}, '${restaurant.name}')" 
-                                                    title="Delete">
+                                            <button type="button" class="action-button delete-button"
+                                                    onclick="confirmDelete(${restaurant.id}, '${restaurant.name}')"
+                                                    title="Delete Restaurant">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </div>
                                     </td>
                                 </tr>
                             </c:forEach>
-                            <c:if test="${empty restaurants}">
-                                <tr>
-                                    <td colspan="7" style="text-align: center;">No restaurants found.</td>
-                                </tr>
-                            </c:if>
                         </tbody>
                     </table>
+
+                    <c:if test="${empty restaurants}">
+                        <div class="empty-state">
+                            <i class="fas fa-utensils"></i>
+                            <h3>No Restaurants Found</h3>
+                            <p>There are no restaurants matching your search criteria.</p>
+                            <a href="${pageContext.request.contextPath}/admin/restaurants/form" class="add-restaurant-button">
+                                <i class="fas fa-plus"></i> Add New Restaurant
+                            </a>
+                        </div>
+                    </c:if>
                 </div>
             </div>
         </div>
@@ -223,18 +243,21 @@
 <!-- Delete Confirmation Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content" style="border-radius: 8px; overflow: hidden;">
+            <div class="modal-header delete-modal-header">
+                <h5 class="modal-title" id="deleteModalLabel" style="font-weight: 600;">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="filter: invert(1);"></button>
             </div>
-            <div class="modal-body">
-                <p>Are you sure you want to delete the restaurant "<span id="deleteRestaurantName"></span>"?</p>
-                <p class="text-danger">This action cannot be undone!</p>
+            <div class="modal-body delete-modal-body">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <i class="fas fa-exclamation-triangle delete-modal-icon"></i>
+                    <p style="font-size: 16px; margin-bottom: 0;">Are you sure you want to delete restaurant <span id="deleteRestaurantName" class="delete-modal-restaurant-name"></span>?</p>
+                    <p class="delete-modal-warning">This action cannot be undone.</p>
+                </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger" onclick="deleteRestaurant()">Delete</button>
+            <div class="modal-footer delete-modal-footer">
+                <button type="button" class="cancel-button" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="confirm-delete-button" onclick="deleteRestaurant()">Delete Restaurant</button>
             </div>
         </div>
     </div>
@@ -247,16 +270,16 @@
         document.getElementById('toggleActiveValue').value = isActive;
         document.getElementById('toggleActiveForm').submit();
     }
-    
+
     // Show delete confirmation modal
     function confirmDelete(id, name) {
         document.getElementById('deleteId').value = id;
         document.getElementById('deleteRestaurantName').textContent = name;
-        
+
         const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
         deleteModal.show();
     }
-    
+
     // Submit delete form
     function deleteRestaurant() {
         document.getElementById('deleteForm').submit();

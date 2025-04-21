@@ -33,7 +33,7 @@ public class LoginServlet extends HttpServlet {
             return;
         }
 
-        // Check for remember-me cookie
+        // Checking  for remember-me cookie
         User user = SessionUtil.getUserFromRememberMeCookie(request);
         if (user != null) {
             // Create a new session for the user
@@ -90,13 +90,7 @@ public class LoginServlet extends HttpServlet {
         }
     }
 
-    /**
-     * Redirect the user based on their role
-     * @param user the user
-     * @param request the HTTP request
-     * @param response the HTTP response
-     * @throws IOException if an I/O error occurs
-     */
+
     private void redirectBasedOnRole(User user, HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         String contextPath = request.getContextPath();
@@ -109,7 +103,7 @@ public class LoginServlet extends HttpServlet {
                 response.sendRedirect(contextPath + "/delivery/dashboard");
                 break;
             default: // CUSTOMER
-                response.sendRedirect(contextPath + "/dashboard");
+                response.sendRedirect(contextPath + "/"); // Redirect to home page instead of dashboard
                 break;
         }
     }

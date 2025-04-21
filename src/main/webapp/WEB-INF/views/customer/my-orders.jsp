@@ -7,7 +7,7 @@
 
 <div class="container" style="padding: 2rem 0;">
     <h1 style="margin-bottom: 2rem;">My Orders</h1>
-    
+
     <!-- Error Messages -->
     <c:if test="${param.error != null}">
         <div class="alert alert-danger" role="alert">
@@ -24,7 +24,7 @@
             </c:choose>
         </div>
     </c:if>
-    
+
     <c:choose>
         <c:when test="${not empty orders}">
             <div class="table-responsive">
@@ -80,6 +80,11 @@
                                             <i class="fas fa-eye"></i>
                                         </a>
                                         <c:if test="${order.status == 'DELIVERED'}">
+                                            <c:if test="${!order.hasRated}">
+                                                <a href="${pageContext.request.contextPath}/rate-order?orderId=${order.id}" class="btn btn-sm btn-warning" title="Rate Order">
+                                                    <i class="fas fa-star"></i>
+                                                </a>
+                                            </c:if>
                                             <a href="${pageContext.request.contextPath}/restaurant?id=${order.restaurantId}" class="btn btn-sm btn-success" title="Reorder">
                                                 <i class="fas fa-redo"></i>
                                             </a>
@@ -96,7 +101,7 @@
             <div class="alert alert-info" role="alert">
                 <i class="fas fa-info-circle"></i> You don't have any orders yet.
             </div>
-            
+
             <div style="text-align: center; margin-top: 2rem;">
                 <a href="${pageContext.request.contextPath}/restaurants" class="btn btn-primary">
                     <i class="fas fa-utensils"></i> Browse Restaurants

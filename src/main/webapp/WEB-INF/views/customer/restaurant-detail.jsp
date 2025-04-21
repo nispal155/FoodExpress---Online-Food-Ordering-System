@@ -46,12 +46,44 @@
                 <p style="margin-bottom: 1rem; color: var(--medium-gray);">
                     ${restaurant.description}
                 </p>
+
+                <!-- Favorite Button -->
+                <c:if test="${not empty sessionScope.user}">
+                    <div style="margin-top: 1rem;">
+                        <c:choose>
+                            <c:when test="${isFavorite}">
+                                <a href="${pageContext.request.contextPath}/favorites/remove?restaurantId=${restaurant.id}" class="btn btn-outline-danger">
+                                    <i class="fas fa-heart"></i> Remove from Favorites
+                                </a>
+                            </c:when>
+                            <c:otherwise>
+                                <a href="${pageContext.request.contextPath}/favorites/add?restaurantId=${restaurant.id}" class="btn btn-outline-primary">
+                                    <i class="far fa-heart"></i> Add to Favorites
+                                </a>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+                </c:if>
             </div>
         </div>
     </div>
 </div>
 
 <div class="container">
+    <!-- Success and Error Messages -->
+    <c:if test="${param.success eq 'added'}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> Item added to cart successfully!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </c:if>
+
+    <c:if test="${param.error eq 'different-restaurant'}">
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle"></i> Your cart contains items from a different restaurant. Please clear your cart or finish your current order first.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </c:if>
     <!-- Category Navigation -->
     <div style="margin-bottom: 2rem; position: sticky; top: 70px; z-index: 100; background-color: white; padding: 1rem 0; border-bottom: 1px solid #eee;">
         <div style="display: flex; overflow-x: auto; white-space: nowrap; padding-bottom: 0.5rem;">
@@ -64,13 +96,13 @@
             </c:forEach>
         </div>
     </div>
-    
+
     <!-- Menu Items by Category -->
     <c:forEach var="category" items="${categories}">
         <c:if test="${not empty menuItemsByCategory[category.id]}">
             <div id="category-${category.id}" style="margin-bottom: 3rem;">
                 <h2 style="margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--primary-color);">${category.name}</h2>
-                
+
                 <div class="row">
                     <c:forEach var="menuItem" items="${menuItemsByCategory[category.id]}">
                         <div class="col-md-6 col-lg-4" style="margin-bottom: 2rem;">
@@ -103,10 +135,48 @@
                                                 <span style="font-weight: bold; font-size: 1.2rem;">$<fmt:formatNumber value="${menuItem.price}" pattern="#,##0.00" /></span>
                                             </c:if>
                                         </div>
+
+                                        <!-- Favorite Icon -->
+                                        <c:if test="${not empty sessionScope.user}">
+                                            <div>
+                                                <c:choose>
+                                                    <c:when test="${favoriteMenuItems[menuItem.id]}">
+                                                        <a href="${pageContext.request.contextPath}/favorites/remove?menuItemId=${menuItem.id}" class="btn btn-sm btn-outline-danger" title="Remove from favorites">
+                                                            <i class="fas fa-heart"></i>
+                                                        </a>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <a href="${pageContext.request.contextPath}/favorites/add?menuItemId=${menuItem.id}" class="btn btn-sm btn-outline-primary" title="Add to favorites">
+                                                            <i class="far fa-heart"></i>
+                                                        </a>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </div>
+                                        </c:if>
                                     </div>
-                                    <button type="button" class="btn btn-primary" style="width: 100%;" onclick="openAddToCartModal(${menuItem.id}, '${menuItem.name}', ${menuItem.effectivePrice})">
-                                        Add to Cart
-                                    </button>
+                                    <div style="display: flex; gap: 0.5rem;">
+                                        <form action="${pageContext.request.contextPath}/cart" method="post" class="w-100">
+                                            <input type="hidden" name="action" value="add">
+                                            <input type="hidden" name="menuItemId" value="${menuItem.id}">
+                                            <div class="mb-2">
+                                                <label for="quantity-${menuItem.id}" class="form-label">Quantity:</label>
+                                                <select name="quantity" id="quantity-${menuItem.id}" class="form-select">
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                    <option value="4">4</option>
+                                                    <option value="5">5</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-2">
+                                                <label for="specialInstructions-${menuItem.id}" class="form-label">Special Instructions:</label>
+                                                <textarea name="specialInstructions" id="specialInstructions-${menuItem.id}" class="form-control" rows="2" placeholder="E.g., No onions, extra sauce, etc."></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary add-to-cart-button w-100">
+                                                <i class="fas fa-cart-plus"></i> Add to Cart
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -115,7 +185,7 @@
             </div>
         </c:if>
     </c:forEach>
-    
+
     <c:if test="${empty menuItems}">
         <div class="alert alert-info" role="alert">
             No menu items available for this restaurant.
@@ -123,66 +193,41 @@
     </c:if>
 </div>
 
-<!-- Add to Cart Modal -->
-<div class="modal fade" id="addToCartModal" tabindex="-1" aria-labelledby="addToCartModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addToCartModalLabel">Add to Cart</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<!-- Floating Cart Button -->
+<c:if test="${not empty sessionScope.user and not empty sessionScope.cart and sessionScope.cart.totalItems > 0}">
+    <div class="floating-cart-button">
+        <a href="${pageContext.request.contextPath}/cart" class="floating-cart-link">
+            <div class="floating-cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="floating-cart-badge">${sessionScope.cart.totalItems}</span>
             </div>
-            <form action="${pageContext.request.contextPath}/cart" method="post">
-                <input type="hidden" name="action" value="add">
-                <input type="hidden" name="menuItemId" id="menuItemId">
-                
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="itemName" class="form-label">Item</label>
-                        <input type="text" class="form-control" id="itemName" readonly>
-                    </div>
-                    <div class="mb-3">
-                        <label for="itemPrice" class="form-label">Price</label>
-                        <input type="text" class="form-control" id="itemPrice" readonly>
-                    </div>
-                    <div class="mb-3">
-                        <label for="quantity" class="form-label">Quantity</label>
-                        <input type="number" class="form-control" id="quantity" name="quantity" min="1" value="1" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="specialInstructions" class="form-label">Special Instructions (optional)</label>
-                        <textarea class="form-control" id="specialInstructions" name="specialInstructions" rows="3" placeholder="E.g., No onions, extra sauce, etc."></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Add to Cart</button>
-                </div>
-            </form>
-        </div>
+            <div class="floating-cart-details">
+                <span class="floating-cart-text">View Cart</span>
+                <span class="floating-cart-total">$${sessionScope.cart.totalPrice}</span>
+            </div>
+        </a>
     </div>
-</div>
+</c:if>
+
+
 
 <script>
-    function openAddToCartModal(menuItemId, name, price) {
-        document.getElementById('menuItemId').value = menuItemId;
-        document.getElementById('itemName').value = name;
-        document.getElementById('itemPrice').value = '$' + price.toFixed(2);
-        
-        const modal = new bootstrap.Modal(document.getElementById('addToCartModal'));
-        modal.show();
-    }
-    
-    // Smooth scrolling for category navigation
-    document.querySelectorAll('a[href^="#category-"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            const targetId = this.getAttribute('href');
-            const targetElement = document.querySelector(targetId);
-            
-            window.scrollTo({
-                top: targetElement.offsetTop - 120, // Adjust for header and sticky nav
-                behavior: 'smooth'
+    // Update cart badge on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        // No need for JavaScript alert as we have a proper alert message in the page
+
+        // Smooth scrolling for category navigation
+        document.querySelectorAll('a[href^="#category-"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+
+                window.scrollTo({
+                    top: targetElement.offsetTop - 120, // Adjust for header and sticky nav
+                    behavior: 'smooth'
+                });
             });
         });
     });

@@ -59,6 +59,66 @@ public class RestaurantService {
     }
 
     /**
+     * Search active restaurants by name or description
+     * @param searchTerm the search term
+     * @return List of matching active restaurants
+     */
+    public List<Restaurant> searchActiveRestaurants(String searchTerm) {
+        String sql = "SELECT * FROM restaurants WHERE is_active = TRUE AND (name LIKE ? OR description LIKE ? OR address LIKE ?) ORDER BY name";
+        List<Restaurant> restaurants = new ArrayList<>();
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            String searchPattern = "%" + searchTerm + "%";
+            stmt.setString(1, searchPattern);
+            stmt.setString(2, searchPattern);
+            stmt.setString(3, searchPattern);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                restaurants.add(mapResultSetToRestaurant(rs));
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error searching restaurants: " + e.getMessage());
+        }
+
+        return restaurants;
+    }
+
+    /**
+     * Search all restaurants by name, description, or address (for admin)
+     * @param searchTerm the search term
+     * @return List of matching restaurants
+     */
+    public List<Restaurant> searchRestaurants(String searchTerm) {
+        String sql = "SELECT * FROM restaurants WHERE name LIKE ? OR description LIKE ? OR address LIKE ? ORDER BY name";
+        List<Restaurant> restaurants = new ArrayList<>();
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            String searchPattern = "%" + searchTerm + "%";
+            stmt.setString(1, searchPattern);
+            stmt.setString(2, searchPattern);
+            stmt.setString(3, searchPattern);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                restaurants.add(mapResultSetToRestaurant(rs));
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error searching restaurants: " + e.getMessage());
+        }
+
+        return restaurants;
+    }
+
+    /**
      * Get a restaurant by ID
      * @param id the restaurant ID
      * @return Restaurant object if found, null otherwise

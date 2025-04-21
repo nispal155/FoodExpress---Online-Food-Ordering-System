@@ -98,8 +98,23 @@ public class UserService {
      * @return true if successful, false otherwise
      */
     public boolean createUser(User user) {
-        String sql = "INSERT INTO users (username, password, email, full_name, phone, address, role) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        // Check if profile_picture column exists in the database
+        boolean hasProfilePicture = false;
+        try (Connection conn = DBUtil.getConnection()) {
+            hasProfilePicture = DBUtil.columnExists(conn, "users", "profile_picture");
+        } catch (SQLException e) {
+            System.err.println("Error checking if profile_picture column exists: " + e.getMessage());
+        }
+
+        // Prepare SQL statement based on whether profile_picture column exists
+        String sql;
+        if (hasProfilePicture && user.getProfilePicture() != null) {
+            sql = "INSERT INTO users (username, password, email, full_name, phone, address, role, profile_picture) " +
+                  "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        } else {
+            sql = "INSERT INTO users (username, password, email, full_name, phone, address, role) " +
+                  "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        }
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -114,6 +129,11 @@ public class UserService {
             stmt.setString(5, user.getPhone());
             stmt.setString(6, user.getAddress());
             stmt.setString(7, user.getRole());
+
+            // Set profile picture if column exists and value is provided
+            if (hasProfilePicture && user.getProfilePicture() != null) {
+                stmt.setString(8, user.getProfilePicture());
+            }
 
             int affectedRows = stmt.executeUpdate();
 
@@ -144,6 +164,18 @@ public class UserService {
     public boolean updateUser(User user) {
         // Check if password needs to be updated
         boolean updatePassword = user.getPassword() != null && !user.getPassword().isEmpty();
+
+        // Make sure username is not null or empty
+        if (user.getUsername() == null || user.getUsername().trim().isEmpty()) {
+            // Fetch the current username from the database
+            User existingUser = getUserById(user.getId());
+            if (existingUser != null) {
+                user.setUsername(existingUser.getUsername());
+            } else {
+                System.err.println("Error updating user: Could not retrieve existing username");
+                return false;
+            }
+        }
 
         String sql;
         if (updatePassword) {
@@ -266,18 +298,20 @@ public class UserService {
 
     /**
      * Authenticate a user
-     * @param username the username
+     * @param usernameOrEmail the username or email
      * @param password the password
      * @return User object if authentication successful, null otherwise
      */
-    public User authenticateUser(String username, String password) {
-        String sql = "SELECT * FROM users WHERE username = ?";
+    public User authenticateUser(String usernameOrEmail, String password) {
+        // First try to authenticate with username
+        String sql = "SELECT * FROM users WHERE username = ? OR email = ?";
         User user = null;
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, username);
+            stmt.setString(1, usernameOrEmail);
+            stmt.setString(2, usernameOrEmail);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {

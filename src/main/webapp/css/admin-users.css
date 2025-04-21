@@ -1,0 +1,364 @@
+/* Admin Users Page Styles */
+:root {
+    --primary-color: #FF5722;
+    --primary-light: #FFCCBC;
+    --secondary-color: #2196F3;
+    --success-color: #4CAF50;
+    --warning-color: #FFC107;
+    --danger-color: #F44336;
+    --purple-color: #6f42c1;
+    --light-gray: #f4f4f4;
+    --medium-gray: #ddd;
+    --dark-gray: #333;
+    --white: #fff;
+    --black: #000;
+    --shadow: 0 2px 5px rgba(0,0,0,0.1);
+    --border-radius: 5px;
+}
+
+/* User Management Header */
+.user-management-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.user-management-header h1 {
+    font-size: 24px;
+    margin: 0;
+    color: var(--dark-gray);
+}
+
+.add-user-button {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.add-user-button:hover {
+    background-color: #E64A19;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.add-user-button i {
+    margin-right: 8px;
+}
+
+/* Search and Filter Section */
+.search-filter-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 25px;
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.search-box {
+    flex: 1;
+    min-width: 250px;
+    display: flex;
+}
+
+.search-input {
+    flex: 1;
+    padding: 10px 15px;
+    border: 1px solid var(--medium-gray);
+    border-radius: 4px 0 0 4px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s;
+    width: calc(100% - 50px);
+}
+
+.search-input:focus {
+    border-color: var(--secondary-color);
+}
+
+.search-button {
+    padding: 0 15px;
+    background-color: var(--secondary-color);
+    color: var(--white);
+    border: none;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    height: 42px;
+    width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-button:hover {
+    background-color: #1976D2;
+}
+
+.filter-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-label {
+    font-size: 14px;
+    color: #666;
+}
+
+.filter-select {
+    padding: 10px 15px;
+    border: 1px solid var(--medium-gray);
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: var(--white);
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.filter-select:focus {
+    border-color: var(--secondary-color);
+}
+
+.filter-button {
+    padding: 10px 15px;
+    background-color: var(--white);
+    color: var(--secondary-color);
+    border: 1px solid var(--secondary-color);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.filter-button:hover {
+    background-color: var(--secondary-color);
+    color: var(--white);
+}
+
+/* Users Table */
+.users-table-container {
+    background-color: var(--white);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.users-table th,
+.users-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.users-table th {
+    background-color: #f9f9f9;
+    font-weight: 600;
+    color: #666;
+    position: relative;
+}
+
+.users-table th:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--medium-gray);
+}
+
+.users-table tbody tr {
+    transition: background-color 0.3s;
+}
+
+.users-table tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+.users-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* User Role Badges */
+.role-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+    min-width: 80px;
+}
+
+.role-admin {
+    background-color: rgba(244, 67, 54, 0.1);
+    color: var(--danger-color);
+}
+
+.role-customer {
+    background-color: rgba(76, 175, 80, 0.1);
+    color: var(--success-color);
+}
+
+.role-delivery {
+    background-color: rgba(111, 66, 193, 0.1);
+    color: var(--purple-color);
+}
+
+/* User Actions */
+.user-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.edit-button,
+.delete-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    color: var(--white);
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.edit-button {
+    background-color: var(--secondary-color);
+}
+
+.edit-button:hover {
+    background-color: #1976D2;
+    transform: translateY(-2px);
+}
+
+.delete-button {
+    background-color: var(--danger-color);
+    border: none;
+    cursor: pointer;
+}
+
+.delete-button:hover {
+    background-color: #D32F2F;
+    transform: translateY(-2px);
+}
+
+/* User Status Indicator */
+.user-status {
+    display: flex;
+    align-items: center;
+}
+
+.status-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.status-active {
+    background-color: var(--success-color);
+}
+
+.status-inactive {
+    background-color: var(--danger-color);
+}
+
+/* Empty State */
+.empty-state {
+    padding: 30px;
+    text-align: center;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.empty-state i {
+    font-size: 48px;
+    color: #ccc;
+    margin-bottom: 15px;
+}
+
+.empty-state h3 {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    color: #888;
+    margin-bottom: 20px;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 5px;
+}
+
+.pagination-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 4px;
+    background-color: var(--white);
+    color: var(--dark-gray);
+    text-decoration: none;
+    border: 1px solid var(--medium-gray);
+    transition: all 0.3s;
+}
+
+.pagination-button:hover {
+    background-color: var(--light-gray);
+}
+
+.pagination-button.active {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border-color: var(--primary-color);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .user-management-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .search-filter-section {
+        flex-direction: column;
+    }
+
+    .users-table {
+        display: block;
+        overflow-x: auto;
+    }
+
+    .users-table th,
+    .users-table td {
+        padding: 10px;
+    }
+}

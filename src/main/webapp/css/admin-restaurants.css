@@ -1,0 +1,478 @@
+/* Admin Restaurants Page Styles */
+:root {
+    --primary-color: #FF5722;
+    --primary-light: #FFCCBC;
+    --secondary-color: #2196F3;
+    --success-color: #4CAF50;
+    --warning-color: #FFC107;
+    --danger-color: #F44336;
+    --purple-color: #6f42c1;
+    --light-gray: #f4f4f4;
+    --medium-gray: #ddd;
+    --dark-gray: #333;
+    --white: #fff;
+    --black: #000;
+    --shadow: 0 2px 5px rgba(0,0,0,0.1);
+    --border-radius: 5px;
+}
+
+/* Admin Container */
+.admin-container {
+    display: flex;
+    min-height: calc(100vh - 60px);
+    background-color: #f9f9f9;
+}
+
+/* Admin Sidebar */
+.admin-sidebar {
+    width: 250px;
+    background-color: var(--white);
+    box-shadow: var(--shadow);
+    flex-shrink: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-right: 20px;
+}
+
+.admin-menu-title {
+    padding: 20px;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--dark-gray);
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.admin-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.admin-menu li {
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.admin-menu li:last-child {
+    border-bottom: none;
+}
+
+.admin-menu a {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    color: var(--dark-gray);
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.admin-menu a:hover {
+    background-color: var(--light-gray);
+}
+
+.admin-menu a.active {
+    background-color: rgba(255, 87, 34, 0.1);
+    color: var(--primary-color);
+    font-weight: 600;
+    border-left: 3px solid var(--primary-color);
+}
+
+.admin-menu a i {
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+}
+
+/* Admin Content */
+.admin-content {
+    flex: 1;
+    padding: 20px;
+}
+
+/* Restaurant Management Header */
+.restaurant-management-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.restaurant-management-header h1 {
+    font-size: 24px;
+    margin: 0;
+    color: var(--dark-gray);
+}
+
+.add-restaurant-button {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.add-restaurant-button:hover {
+    background-color: #E64A19;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.add-restaurant-button i {
+    margin-right: 8px;
+}
+
+/* Search and Filter Section */
+.search-filter-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 25px;
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.search-box {
+    flex: 1;
+    min-width: 250px;
+    display: flex;
+}
+
+.search-input {
+    flex: 1;
+    padding: 10px 15px;
+    border: 1px solid var(--medium-gray);
+    border-radius: 4px 0 0 4px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s;
+    width: calc(100% - 50px);
+}
+
+.search-input:focus {
+    border-color: var(--secondary-color);
+}
+
+.search-button {
+    padding: 0 15px;
+    background-color: var(--secondary-color);
+    color: var(--white);
+    border: none;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    height: 42px;
+    width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-button:hover {
+    background-color: #1976D2;
+}
+
+/* Restaurants Table */
+.restaurants-table-container {
+    background-color: var(--white);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.restaurants-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.restaurants-table th,
+.restaurants-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.restaurants-table th {
+    background-color: #f9f9f9;
+    font-weight: 600;
+    color: #666;
+    position: relative;
+}
+
+.restaurants-table th:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--medium-gray);
+}
+
+.restaurants-table tbody tr {
+    transition: background-color 0.3s;
+}
+
+.restaurants-table tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+.restaurants-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Restaurant Image */
+.restaurant-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.restaurant-image-placeholder {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    font-size: 20px;
+}
+
+/* Restaurant Status Badge */
+.status-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+    min-width: 80px;
+}
+
+.status-active {
+    background-color: rgba(76, 175, 80, 0.1);
+    color: var(--success-color);
+    border: 1px solid rgba(76, 175, 80, 0.2);
+}
+
+.status-inactive {
+    background-color: rgba(244, 67, 54, 0.1);
+    color: var(--danger-color);
+    border: 1px solid rgba(244, 67, 54, 0.2);
+}
+
+/* Restaurant Rating */
+.restaurant-rating {
+    display: flex;
+    align-items: center;
+}
+
+.rating-value {
+    font-weight: 600;
+    margin-right: 8px;
+}
+
+.rating-stars {
+    color: var(--warning-color);
+}
+
+/* Restaurant Actions */
+.restaurant-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.action-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 4px;
+    color: var(--white);
+    text-decoration: none;
+    transition: all 0.3s;
+    border: none;
+    cursor: pointer;
+}
+
+.action-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.edit-button {
+    background-color: var(--secondary-color);
+}
+
+.edit-button:hover {
+    background-color: #1976D2;
+}
+
+.menu-button {
+    background-color: var(--purple-color);
+}
+
+.menu-button:hover {
+    background-color: #5e35b1;
+}
+
+.toggle-button {
+    background-color: var(--warning-color);
+}
+
+.toggle-button:hover {
+    background-color: #FFA000;
+}
+
+.toggle-button.activate {
+    background-color: var(--success-color);
+}
+
+.toggle-button.activate:hover {
+    background-color: #388E3C;
+}
+
+.delete-button {
+    background-color: var(--danger-color);
+}
+
+.delete-button:hover {
+    background-color: #D32F2F;
+}
+
+/* Empty State */
+.empty-state {
+    padding: 30px;
+    text-align: center;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.empty-state i {
+    font-size: 48px;
+    color: #ccc;
+    margin-bottom: 15px;
+}
+
+.empty-state h3 {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    color: #888;
+    margin-bottom: 20px;
+}
+
+/* Delete Modal */
+.delete-modal-header {
+    background-color: var(--danger-color);
+    color: white;
+    border-bottom: none;
+}
+
+.delete-modal-body {
+    padding: 20px;
+    text-align: center;
+}
+
+.delete-modal-icon {
+    font-size: 48px;
+    color: var(--warning-color);
+    margin-bottom: 15px;
+}
+
+.delete-modal-restaurant-name {
+    font-weight: bold;
+}
+
+.delete-modal-warning {
+    color: #666;
+    margin-top: 10px;
+}
+
+.delete-modal-footer {
+    border-top: none;
+    padding: 0 20px 20px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.cancel-button {
+    padding: 8px 16px;
+    background-color: var(--white);
+    color: var(--dark-gray);
+    border: 1px solid var(--medium-gray);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.cancel-button:hover {
+    background-color: var(--light-gray);
+}
+
+.confirm-delete-button {
+    padding: 8px 16px;
+    background-color: var(--danger-color);
+    color: var(--white);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.confirm-delete-button:hover {
+    background-color: #D32F2F;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .admin-container {
+        flex-direction: column;
+    }
+    
+    .admin-sidebar {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+    
+    .restaurant-management-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .search-filter-section {
+        flex-direction: column;
+    }
+    
+    .restaurants-table {
+        display: block;
+        overflow-x: auto;
+    }
+    
+    .restaurants-table th,
+    .restaurants-table td {
+        padding: 10px;
+    }
+    
+    .restaurant-actions {
+        flex-wrap: wrap;
+    }
+}

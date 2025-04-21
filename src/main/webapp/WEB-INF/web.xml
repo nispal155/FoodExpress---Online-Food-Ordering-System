@@ -12,4 +12,17 @@
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>
+
+    <!-- Database Initialization Servlets -->
+    <servlet>
+        <servlet-name>DatabaseInitServlet</servlet-name>
+        <servlet-class>com.example.foodexpressonlinefoodorderingsystem.util.DatabaseInitServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>DatabaseRatingInitServlet</servlet-name>
+        <servlet-class>com.example.foodexpressonlinefoodorderingsystem.util.DatabaseRatingInitServlet</servlet-class>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
 </web-app>

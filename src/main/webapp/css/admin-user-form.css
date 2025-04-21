@@ -1,0 +1,331 @@
+/* Admin User Form Styles */
+:root {
+    --primary-color: #FF5722;
+    --primary-light: #FFCCBC;
+    --primary-dark: #E64A19;
+    --secondary-color: #2196F3;
+    --success-color: #4CAF50;
+    --warning-color: #FFC107;
+    --danger-color: #F44336;
+    --light-gray: #f4f4f4;
+    --medium-gray: #ddd;
+    --dark-gray: #333;
+    --white: #fff;
+    --black: #000;
+    --shadow: 0 2px 5px rgba(0,0,0,0.1);
+    --border-radius: 5px;
+}
+
+/* User Form Header */
+.user-form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.user-form-header h1 {
+    font-size: 24px;
+    margin: 0;
+    color: var(--dark-gray);
+}
+
+.breadcrumb {
+    margin: 5px 0 0;
+    font-size: 14px;
+    color: #666;
+}
+
+.breadcrumb a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    background-color: var(--light-gray);
+    color: var(--dark-gray);
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.back-button:hover {
+    background-color: var(--medium-gray);
+    text-decoration: none;
+    color: var(--dark-gray);
+}
+
+.back-button i {
+    margin-right: 5px;
+}
+
+/* User Form Card */
+.user-form-card {
+    background-color: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    margin-bottom: 30px;
+}
+
+/* Alert Messages */
+.alert-message {
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.alert-message i {
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+.alert-message.error {
+    background-color: rgba(244, 67, 54, 0.1);
+    color: var(--danger-color);
+    border-left: 4px solid var(--danger-color);
+}
+
+.alert-message.success {
+    background-color: rgba(76, 175, 80, 0.1);
+    color: var(--success-color);
+    border-left: 4px solid var(--success-color);
+}
+
+/* Form Layout */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.form-section {
+    margin-bottom: 20px;
+}
+
+.section-title {
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: var(--dark-gray);
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--light-gray);
+}
+
+/* Form Elements */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--dark-gray);
+}
+
+.required {
+    color: var(--danger-color);
+}
+
+.optional {
+    font-size: 0.9em;
+    color: #666;
+    font-weight: normal;
+}
+
+.input-with-icon {
+    position: relative;
+}
+
+.input-with-icon i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+}
+
+.input-with-icon.textarea i {
+    top: 15px;
+    transform: none;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 12px 12px 40px;
+    border: 1px solid var(--medium-gray);
+    border-radius: 5px;
+    font-size: 14px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(255, 87, 34, 0.2);
+}
+
+textarea.form-input {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+}
+
+.toggle-password:focus {
+    outline: none;
+}
+
+/* Toggle Switch */
+.toggle-switch-container {
+    display: flex;
+    align-items: center;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+    margin-right: 10px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+    background-color: var(--success-color);
+}
+
+input:focus + .toggle-slider {
+    box-shadow: 0 0 1px var(--success-color);
+}
+
+input:checked + .toggle-slider:before {
+    transform: translateX(26px);
+}
+
+.toggle-label {
+    font-size: 14px;
+    color: #666;
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--light-gray);
+}
+
+.btn-cancel {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: var(--light-gray);
+    color: var(--dark-gray);
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    margin-right: 10px;
+    transition: background-color 0.3s;
+}
+
+.btn-cancel:hover {
+    background-color: var(--medium-gray);
+    text-decoration: none;
+    color: var(--dark-gray);
+}
+
+.btn-save {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-save:hover {
+    background-color: var(--primary-dark);
+}
+
+.btn-cancel i, .btn-save i {
+    margin-right: 5px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .user-form-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .header-right {
+        margin-top: 15px;
+    }
+    
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .user-form-card {
+        padding: 20px;
+    }
+}

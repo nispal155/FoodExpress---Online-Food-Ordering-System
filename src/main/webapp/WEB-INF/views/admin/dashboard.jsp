@@ -4,178 +4,169 @@
     <jsp:param name="title" value="Admin Dashboard" />
 </jsp:include>
 
-<div class="row" style="margin-top: 2rem;">
-    <div class="col-md-3 col-sm-12">
-        <div class="card">
-            <div class="card-header">
-                <h2 class="card-title">Admin Menu</h2>
-            </div>
-            <div style="padding: 0;">
-                <ul style="list-style: none; padding: 0; margin: 0;">
-                    <li style="border-bottom: 1px solid var(--medium-gray);">
-                        <a href="${pageContext.request.contextPath}/admin/dashboard" style="display: block; padding: 1rem; color: var(--primary-color); text-decoration: none; font-weight: bold; background-color: rgba(255, 87, 34, 0.1);">
-                            <i class="fas fa-tachometer-alt"></i> Dashboard
-                        </a>
-                    </li>
-                    <li style="border-bottom: 1px solid var(--medium-gray);">
-                        <a href="${pageContext.request.contextPath}/admin/users" style="display: block; padding: 1rem; color: var(--dark-gray); text-decoration: none;">
-                            <i class="fas fa-users"></i> Users
-                        </a>
-                    </li>
-                    <li style="border-bottom: 1px solid var(--medium-gray);">
-                        <a href="${pageContext.request.contextPath}/admin/restaurants" style="display: block; padding: 1rem; color: var(--dark-gray); text-decoration: none;">
-                            <i class="fas fa-utensils"></i> Restaurants
-                        </a>
-                    </li>
-                    <li style="border-bottom: 1px solid var(--medium-gray);">
-                        <a href="${pageContext.request.contextPath}/admin/menu-items" style="display: block; padding: 1rem; color: var(--dark-gray); text-decoration: none;">
-                            <i class="fas fa-hamburger"></i> Menu Items
-                        </a>
-                    </li>
-                    <li style="border-bottom: 1px solid var(--medium-gray);">
-                        <a href="${pageContext.request.contextPath}/admin/orders" style="display: block; padding: 1rem; color: var(--dark-gray); text-decoration: none;">
-                            <i class="fas fa-shopping-cart"></i> Orders
-                        </a>
-                    </li>
-                    <li>
-                        <a href="${pageContext.request.contextPath}/admin/settings" style="display: block; padding: 1rem; color: var(--dark-gray); text-decoration: none;">
-                            <i class="fas fa-cog"></i> Settings
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+<!-- Include the admin dashboard CSS -->
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin-dashboard.css">
+
+<div class="admin-container">
+    <!-- Admin Sidebar -->
+    <div class="admin-sidebar">
+        <div class="admin-menu-title">Admin Menu</div>
+        <ul class="admin-menu">
+            <li>
+                <a href="${pageContext.request.contextPath}/admin/dashboard" class="active">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+            </li>
+            <li>
+                <a href="${pageContext.request.contextPath}/admin/users">
+                    <i class="fas fa-users"></i> Users
+                </a>
+            </li>
+            <li>
+                <a href="${pageContext.request.contextPath}/admin/restaurants">
+                    <i class="fas fa-utensils"></i> Restaurant
+                </a>
+            </li>
+            <li>
+                <a href="${pageContext.request.contextPath}/admin/menu-items">
+                    <i class="fas fa-hamburger"></i> Menu Items
+                </a>
+            </li>
+            <li>
+                <a href="${pageContext.request.contextPath}/admin/orders">
+                    <i class="fas fa-shopping-cart"></i> Orders
+                </a>
+            </li>
+            <li>
+                <a href="${pageContext.request.contextPath}/admin/reporting">
+                    <i class="fas fa-chart-bar"></i> Reports
+                </a>
+            </li>
+            <li>
+                <a href="${pageContext.request.contextPath}/admin/settings">
+                    <i class="fas fa-cog"></i> Settings
+                </a>
+            </li>
+        </ul>
     </div>
 
-    <div class="col-md-9 col-sm-12">
-        <div class="card">
-            <div class="card-header">
-                <h2 class="card-title">Dashboard</h2>
-                <p>Welcome to the admin dashboard</p>
-            </div>
-            <div style="padding: 1rem;">
-                <div class="row">
-                    <div class="col-md-3 col-sm-6 col-xs-12" style="margin-bottom: 1.5rem;">
-                        <div class="card" style="background-color: rgba(33, 150, 243, 0.1); border-color: var(--secondary-color);">
-                            <div style="text-align: center;">
-                                <i class="fas fa-users" style="font-size: 2.5rem; color: var(--secondary-color);"></i>
-                                <h3 style="margin: 0.5rem 0; color: var(--secondary-color);">Users</h3>
-                                <p style="font-size: 2rem; font-weight: bold; margin: 0;">${userCount}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3 col-sm-6 col-xs-12" style="margin-bottom: 1.5rem;">
-                        <div class="card" style="background-color: rgba(255, 87, 34, 0.1); border-color: var(--primary-color);">
-                            <div style="text-align: center;">
-                                <i class="fas fa-utensils" style="font-size: 2.5rem; color: var(--primary-color);"></i>
-                                <h3 style="margin: 0.5rem 0; color: var(--primary-color);">Restaurants</h3>
-                                <p style="font-size: 2rem; font-weight: bold; margin: 0;">${restaurantCount}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3 col-sm-6 col-xs-12" style="margin-bottom: 1.5rem;">
-                        <div class="card" style="background-color: rgba(76, 175, 80, 0.1); border-color: var(--success-color);">
-                            <div style="text-align: center;">
-                                <i class="fas fa-hamburger" style="font-size: 2.5rem; color: var(--success-color);"></i>
-                                <h3 style="margin: 0.5rem 0; color: var(--success-color);">Menu Items</h3>
-                                <p style="font-size: 2rem; font-weight: bold; margin: 0;">${menuItemCount}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3 col-sm-6 col-xs-12" style="margin-bottom: 1.5rem;">
-                        <div class="card" style="background-color: rgba(255, 193, 7, 0.1); border-color: var(--warning-color);">
-                            <div style="text-align: center;">
-                                <i class="fas fa-star" style="font-size: 2.5rem; color: var(--warning-color);"></i>
-                                <h3 style="margin: 0.5rem 0; color: var(--warning-color);">Specials</h3>
-                                <p style="font-size: 2rem; font-weight: bold; margin: 0;">${specialItemCount}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- Admin Content -->
+    <div class="admin-content">
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+            <h1>Dashboard</h1>
+            <p>Welcome to the admin dashboard</p>
         </div>
 
-        <div class="card" style="margin-top: 1.5rem;">
-            <div class="card-header">
-                <h2 class="card-title">Recent Orders</h2>
-            </div>
-            <div style="padding: 1rem;">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Order ID</th>
-                                <th>Customer</th>
-                                <th>Restaurant</th>
-                                <th>Amount</th>
-                                <th>Status</th>
-                                <th>Date</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>#1001</td>
-                                <td>John Doe</td>
-                                <td>Pizza Palace</td>
-                                <td>$24.99</td>
-                                <td><span style="background-color: rgba(76, 175, 80, 0.1); color: var(--success-color); padding: 0.25rem 0.5rem; border-radius: 4px;">Delivered</span></td>
-                                <td>2023-04-15</td>
-                                <td>
-                                    <a href="#" class="btn btn-sm btn-secondary"><i class="fas fa-eye"></i></a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>#1002</td>
-                                <td>Jane Smith</td>
-                                <td>Burger King</td>
-                                <td>$18.50</td>
-                                <td><span style="background-color: rgba(255, 193, 7, 0.1); color: var(--warning-color); padding: 0.25rem 0.5rem; border-radius: 4px;">Out for Delivery</span></td>
-                                <td>2023-04-15</td>
-                                <td>
-                                    <a href="#" class="btn btn-sm btn-secondary"><i class="fas fa-eye"></i></a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>#1003</td>
-                                <td>Robert Johnson</td>
-                                <td>Taco Bell</td>
-                                <td>$15.75</td>
-                                <td><span style="background-color: rgba(33, 150, 243, 0.1); color: var(--secondary-color); padding: 0.25rem 0.5rem; border-radius: 4px;">Preparing</span></td>
-                                <td>2023-04-15</td>
-                                <td>
-                                    <a href="#" class="btn btn-sm btn-secondary"><i class="fas fa-eye"></i></a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>#1004</td>
-                                <td>Emily Davis</td>
-                                <td>Subway</td>
-                                <td>$12.25</td>
-                                <td><span style="background-color: rgba(244, 67, 54, 0.1); color: var(--danger-color); padding: 0.25rem 0.5rem; border-radius: 4px;">Cancelled</span></td>
-                                <td>2023-04-14</td>
-                                <td>
-                                    <a href="#" class="btn btn-sm btn-secondary"><i class="fas fa-eye"></i></a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>#1005</td>
-                                <td>Michael Wilson</td>
-                                <td>KFC</td>
-                                <td>$22.99</td>
-                                <td><span style="background-color: rgba(76, 175, 80, 0.1); color: var(--success-color); padding: 0.25rem 0.5rem; border-radius: 4px;">Delivered</span></td>
-                                <td>2023-04-14</td>
-                                <td>
-                                    <a href="#" class="btn btn-sm btn-secondary"><i class="fas fa-eye"></i></a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+        <!-- Dashboard Cards -->
+        <div class="dashboard-cards">
+            <a href="${pageContext.request.contextPath}/admin/users" class="dashboard-card-link">
+                <div class="dashboard-card dashboard-card-users">
+                    <div class="dashboard-card-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="dashboard-card-title">Users</div>
+                    <div class="dashboard-card-value">${userCount}</div>
                 </div>
-                <a href="${pageContext.request.contextPath}/admin/orders" class="btn btn-primary">View All Orders</a>
+            </a>
+
+            <a href="${pageContext.request.contextPath}/admin/restaurants" class="dashboard-card-link">
+                <div class="dashboard-card dashboard-card-restaurants">
+                    <div class="dashboard-card-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <div class="dashboard-card-title">Restaurants</div>
+                    <div class="dashboard-card-value">${restaurantCount}</div>
+                </div>
+            </a>
+
+            <a href="${pageContext.request.contextPath}/admin/menu-items" class="dashboard-card-link">
+                <div class="dashboard-card dashboard-card-menu">
+                    <div class="dashboard-card-icon">
+                        <i class="fas fa-hamburger"></i>
+                    </div>
+                    <div class="dashboard-card-title">Menu Items</div>
+                    <div class="dashboard-card-value">${menuItemCount}</div>
+                </div>
+            </a>
+
+            <a href="${pageContext.request.contextPath}/admin/reporting" class="dashboard-card-link">
+                <div class="dashboard-card dashboard-card-specials">
+                    <div class="dashboard-card-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <div class="dashboard-card-title">Reports</div>
+                    <div class="dashboard-card-value"><i class="fas fa-chart-line"></i></div>
+                </div>
+            </a>
+        </div>
+
+        <!-- Recent Orders -->
+        <div class="recent-orders">
+            <div class="recent-orders-header">
+                <h2>Recent Orders</h2>
+            </div>
+            <div class="recent-orders-content">
+                <table class="orders-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Restaurant</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#1001</td>
+                            <td>John Doe</td>
+                            <td>Pizza Palace</td>
+                            <td>$24.99</td>
+                            <td><span class="status-badge status-delivered">Delivered</span></td>
+                            <td>2025-04-15</td>
+                            <td>
+                                <a href="#" class="action-button"><i class="fas fa-eye"></i></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#1002</td>
+                            <td>Ankita Raut</td>
+                            <td>Falaicha</td>
+                            <td>$55.99</td>
+                            <td><span class="status-badge status-preparing">Preparing</span></td>
+                            <td>2025-04-10</td>
+                            <td>
+                                <a href="#" class="action-button"><i class="fas fa-eye"></i></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#1003</td>
+                            <td>John Doe</td>
+                            <td>Pizza Palace</td>
+                            <td>$24.99</td>
+                            <td><span class="status-badge status-out-for-delivery">Out of Delivery</span></td>
+                            <td>2025-04-15</td>
+                            <td>
+                                <a href="#" class="action-button"><i class="fas fa-eye"></i></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#1004</td>
+                            <td>Ankita Raut</td>
+                            <td>Falaicha</td>
+                            <td>$55.99</td>
+                            <td><span class="status-badge status-cancelled">Cancelled</span></td>
+                            <td>2025-04-10</td>
+                            <td>
+                                <a href="#" class="action-button"><i class="fas fa-eye"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <a href="${pageContext.request.contextPath}/admin/orders" class="view-all-button">View all orders</a>
             </div>
         </div>
     </div>
