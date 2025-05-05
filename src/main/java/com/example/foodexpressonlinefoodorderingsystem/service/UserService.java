@@ -98,23 +98,41 @@ public class UserService {
      * @return true if successful, false otherwise
      */
     public boolean createUser(User user) {
-        // Check if profile_picture column exists in the database
+        // Check if columns exist in the database
         boolean hasProfilePicture = false;
+        boolean hasIsActive = false;
         try (Connection conn = DBUtil.getConnection()) {
             hasProfilePicture = DBUtil.columnExists(conn, "users", "profile_picture");
+            hasIsActive = DBUtil.columnExists(conn, "users", "is_active");
         } catch (SQLException e) {
-            System.err.println("Error checking if profile_picture column exists: " + e.getMessage());
+            System.err.println("Error checking if columns exist: " + e.getMessage());
         }
 
-        // Prepare SQL statement based on whether profile_picture column exists
-        String sql;
-        if (hasProfilePicture && user.getProfilePicture() != null) {
-            sql = "INSERT INTO users (username, password, email, full_name, phone, address, role, profile_picture) " +
-                  "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        } else {
-            sql = "INSERT INTO users (username, password, email, full_name, phone, address, role) " +
-                  "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        // Prepare SQL statement based on which columns exist
+        StringBuilder sqlBuilder = new StringBuilder("INSERT INTO users (username, password, email, full_name, phone, address, role");
+
+        if (hasProfilePicture) {
+            sqlBuilder.append(", profile_picture");
         }
+
+        if (hasIsActive) {
+            sqlBuilder.append(", is_active");
+        }
+
+        sqlBuilder.append(") VALUES (?, ?, ?, ?, ?, ?, ?");
+
+        // Add placeholders for additional columns
+        if (hasProfilePicture) {
+            sqlBuilder.append(", ?");
+        }
+
+        if (hasIsActive) {
+            sqlBuilder.append(", ?");
+        }
+
+        sqlBuilder.append(")");
+
+        String sql = sqlBuilder.toString();
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -130,9 +148,16 @@ public class UserService {
             stmt.setString(6, user.getAddress());
             stmt.setString(7, user.getRole());
 
+            int paramIndex = 8;
+
             // Set profile picture if column exists and value is provided
-            if (hasProfilePicture && user.getProfilePicture() != null) {
-                stmt.setString(8, user.getProfilePicture());
+            if (hasProfilePicture) {
+                stmt.setString(paramIndex++, user.getProfilePicture() != null ? user.getProfilePicture() : "");
+            }
+
+            // Set is_active if column exists
+            if (hasIsActive) {
+                stmt.setBoolean(paramIndex++, user.isActive());
             }
 
             int affectedRows = stmt.executeUpdate();
@@ -162,31 +187,49 @@ public class UserService {
      * @return true if successful, false otherwise
      */
     public boolean updateUser(User user) {
+        // Always fetch the existing user to ensure we have all fields
+        User existingUser = getUserById(user.getId());
+        if (existingUser == null) {
+            System.err.println("Error updating user: Could not retrieve existing user");
+            return false;
+        }
+
         // Check if password needs to be updated
         boolean updatePassword = user.getPassword() != null && !user.getPassword().isEmpty();
 
-        // Make sure username is not null or empty
-        if (user.getUsername() == null || user.getUsername().trim().isEmpty()) {
-            // Fetch the current username from the database
-            User existingUser = getUserById(user.getId());
-            if (existingUser != null) {
-                user.setUsername(existingUser.getUsername());
-            } else {
-                System.err.println("Error updating user: Could not retrieve existing username");
-                return false;
-            }
+        // If password is not being updated, preserve the existing password
+        if (!updatePassword) {
+            user.setPassword(existingUser.getPassword());
         }
 
-        String sql;
-        if (updatePassword) {
-            sql = "UPDATE users SET username = ?, password = ?, email = ?, full_name = ?, " +
-                  "phone = ?, address = ?, role = ?, profile_picture = ?, updated_at = CURRENT_TIMESTAMP " +
-                  "WHERE id = ?";
-        } else {
-            sql = "UPDATE users SET username = ?, email = ?, full_name = ?, " +
-                  "phone = ?, address = ?, role = ?, profile_picture = ?, updated_at = CURRENT_TIMESTAMP " +
-                  "WHERE id = ?";
+        // Make sure username is not null or empty
+        if (user.getUsername() == null || user.getUsername().trim().isEmpty()) {
+            user.setUsername(existingUser.getUsername());
         }
+
+        // Check if is_active column exists
+        boolean hasIsActive = false;
+        try (Connection conn = DBUtil.getConnection()) {
+            hasIsActive = DBUtil.columnExists(conn, "users", "is_active");
+        } catch (SQLException e) {
+            System.err.println("Error checking if is_active column exists: " + e.getMessage());
+        }
+
+        StringBuilder sqlBuilder = new StringBuilder("UPDATE users SET username = ?");
+
+        if (updatePassword) {
+            sqlBuilder.append(", password = ?");
+        }
+
+        sqlBuilder.append(", email = ?, full_name = ?, phone = ?, address = ?, role = ?, profile_picture = ?");
+
+        if (hasIsActive) {
+            sqlBuilder.append(", is_active = ?");
+        }
+
+        sqlBuilder.append(", updated_at = CURRENT_TIMESTAMP WHERE id = ?");
+
+        String sql = sqlBuilder.toString();
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -206,6 +249,12 @@ public class UserService {
             stmt.setString(paramIndex++, user.getAddress());
             stmt.setString(paramIndex++, user.getRole());
             stmt.setString(paramIndex++, user.getProfilePicture());
+
+            // Set is_active if column exists
+            if (hasIsActive) {
+                stmt.setBoolean(paramIndex++, user.isActive());
+            }
+
             stmt.setInt(paramIndex, user.getId());
 
             int affectedRows = stmt.executeUpdate();
@@ -244,7 +293,7 @@ public class UserService {
      * @return List of all users
      */
     public List<User> getAllUsers() {
-        String sql = "SELECT * FROM users";
+        String sql = "SELECT * FROM users ORDER BY id";
         List<User> users = new ArrayList<>();
 
         try (Connection conn = DBUtil.getConnection();
@@ -263,6 +312,58 @@ public class UserService {
     }
 
     /**
+     * Get all users with pagination
+     * @param page the page number (1-based)
+     * @param pageSize the number of users per page
+     * @return List of users for the specified page
+     */
+    public List<User> getAllUsersPaginated(int page, int pageSize) {
+        String sql = "SELECT * FROM users ORDER BY id LIMIT ? OFFSET ?";
+        List<User> users = new ArrayList<>();
+        int offset = (page - 1) * pageSize;
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, pageSize);
+            stmt.setInt(2, offset);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                users.add(mapResultSetToUser(rs));
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error getting paginated users: " + e.getMessage());
+        }
+
+        return users;
+    }
+
+    /**
+     * Count all users
+     * @return Total number of users
+     */
+    public int countAllUsers() {
+        String sql = "SELECT COUNT(*) FROM users";
+        int count = 0;
+
+        try (Connection conn = DBUtil.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error counting users: " + e.getMessage());
+        }
+
+        return count;
+    }
+
+    /**
      * Get users by role
      * @param role the role to filter by (ADMIN, CUSTOMER, DELIVERY)
      * @return List of users with the specified role
@@ -276,9 +377,9 @@ public class UserService {
 
             String sql;
             if (hasIsActive) {
-                sql = "SELECT * FROM users WHERE role = ? AND is_active = TRUE ORDER BY full_name";
+                sql = "SELECT * FROM users WHERE role = ? ORDER BY id";
             } else {
-                sql = "SELECT * FROM users WHERE role = ? ORDER BY full_name";
+                sql = "SELECT * FROM users WHERE role = ? ORDER BY id";
             }
 
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -294,6 +395,63 @@ public class UserService {
         }
 
         return users;
+    }
+
+    /**
+     * Get users by role with pagination
+     * @param role the role to filter by (ADMIN, CUSTOMER, DELIVERY)
+     * @param page the page number (1-based)
+     * @param pageSize the number of users per page
+     * @return List of users with the specified role for the specified page
+     */
+    public List<User> getUsersByRolePaginated(String role, int page, int pageSize) {
+        List<User> users = new ArrayList<>();
+        int offset = (page - 1) * pageSize;
+
+        try (Connection conn = DBUtil.getConnection()) {
+            String sql = "SELECT * FROM users WHERE role = ? ORDER BY id LIMIT ? OFFSET ?";
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, role);
+                stmt.setInt(2, pageSize);
+                stmt.setInt(3, offset);
+                ResultSet rs = stmt.executeQuery();
+
+                while (rs.next()) {
+                    users.add(mapResultSetToUser(rs));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error getting paginated users by role: " + e.getMessage());
+        }
+
+        return users;
+    }
+
+    /**
+     * Count users by role
+     * @param role the role to filter by (ADMIN, CUSTOMER, DELIVERY)
+     * @return Total number of users with the specified role
+     */
+    public int countUsersByRole(String role) {
+        String sql = "SELECT COUNT(*) FROM users WHERE role = ?";
+        int count = 0;
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, role);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error counting users by role: " + e.getMessage());
+        }
+
+        return count;
     }
 
     /**
@@ -488,6 +646,14 @@ public class UserService {
             // Ignore if the columns don't exist
         }
 
+        // Get is_active if it exists in the result set
+        try {
+            user.setActive(rs.getBoolean("is_active"));
+        } catch (SQLException e) {
+            // If the column doesn't exist, default to active
+            user.setActive(true);
+        }
+
         return user;
     }
 
@@ -552,7 +718,7 @@ public class UserService {
      * @return List of users matching the search criteria
      */
     public List<User> searchUsers(String query) {
-        String sql = "SELECT * FROM users WHERE username LIKE ? OR email LIKE ? OR full_name LIKE ? ORDER BY full_name";
+        String sql = "SELECT * FROM users WHERE username LIKE ? OR email LIKE ? OR full_name LIKE ? ORDER BY id";
         List<User> users = new ArrayList<>();
 
         try (Connection conn = DBUtil.getConnection();
@@ -574,6 +740,71 @@ public class UserService {
         }
 
         return users;
+    }
+
+    /**
+     * Search users by name, email, or username with pagination
+     * @param query the search query
+     * @param page the page number (1-based)
+     * @param pageSize the number of users per page
+     * @return List of users matching the search criteria for the specified page
+     */
+    public List<User> searchUsersPaginated(String query, int page, int pageSize) {
+        String sql = "SELECT * FROM users WHERE username LIKE ? OR email LIKE ? OR full_name LIKE ? ORDER BY id LIMIT ? OFFSET ?";
+        List<User> users = new ArrayList<>();
+        int offset = (page - 1) * pageSize;
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            String searchPattern = "%" + query + "%";
+            stmt.setString(1, searchPattern);
+            stmt.setString(2, searchPattern);
+            stmt.setString(3, searchPattern);
+            stmt.setInt(4, pageSize);
+            stmt.setInt(5, offset);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                users.add(mapResultSetToUser(rs));
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error searching users with pagination: " + e.getMessage());
+        }
+
+        return users;
+    }
+
+    /**
+     * Count users matching a search query
+     * @param query the search query
+     * @return Total number of users matching the search criteria
+     */
+    public int countSearchUsers(String query) {
+        String sql = "SELECT COUNT(*) FROM users WHERE username LIKE ? OR email LIKE ? OR full_name LIKE ?";
+        int count = 0;
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            String searchPattern = "%" + query + "%";
+            stmt.setString(1, searchPattern);
+            stmt.setString(2, searchPattern);
+            stmt.setString(3, searchPattern);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error counting search results: " + e.getMessage());
+        }
+
+        return count;
     }
 
     /**

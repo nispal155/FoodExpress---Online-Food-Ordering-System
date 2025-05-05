@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <jsp:include page="/WEB-INF/includes/header.jsp">
     <jsp:param name="title" value="Food Express - Order Confirmation" />
 </jsp:include>
@@ -12,7 +12,7 @@
             <h1 style="margin-bottom: 0.5rem;">Order Confirmed!</h1>
             <p style="font-size: 1.2rem; margin: 0;">Your order has been placed successfully.</p>
         </div>
-        
+
         <div style="padding: 2rem;">
             <div style="margin-bottom: 2rem;">
                 <h2 style="margin-bottom: 1rem;">Order Details</h2>
@@ -39,12 +39,12 @@
                     </div>
                 </div>
             </div>
-            
+
             <div style="margin-bottom: 2rem;">
                 <h2 style="margin-bottom: 1rem;">Restaurant</h2>
                 <p style="font-weight: bold; font-size: 1.2rem;">${order.restaurantName}</p>
             </div>
-            
+
             <div style="margin-bottom: 2rem;">
                 <h2 style="margin-bottom: 1rem;">Delivery Information</h2>
                 <div style="display: flex; flex-wrap: wrap;">
@@ -64,7 +64,7 @@
                     </div>
                 </c:if>
             </div>
-            
+
             <div style="margin-bottom: 2rem;">
                 <h2 style="margin-bottom: 1rem;">Order Items</h2>
                 <div class="table-responsive">
@@ -105,7 +105,7 @@
                     </table>
                 </div>
             </div>
-            
+
             <div style="margin-bottom: 2rem;">
                 <h2 style="margin-bottom: 1rem;">Payment Information</h2>
                 <div style="display: flex; flex-wrap: wrap;">
@@ -131,7 +131,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div style="text-align: center; margin-top: 2rem;">
                 <a href="${pageContext.request.contextPath}/track-order?id=${order.id}" class="btn btn-primary btn-lg" style="margin-right: 1rem;">
                     <i class="fas fa-truck"></i> Track Order

@@ -1,55 +1,22 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <jsp:include page="/WEB-INF/includes/header.jsp">
-    <jsp:param name="title" value="Admin - ${pageTitle}" />
+    <jsp:param name="pageTitle" value="Admin - System Settings" />
+    <jsp:param name="activeLink" value="admin" />
 </jsp:include>
 
-<!-- Include custom CSS for admin settings -->
+<!-- Include the admin CSS -->
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin-common.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin-settings.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin-sidebar.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 
 <div class="admin-container">
-    <!-- Admin Sidebar -->
-    <div class="admin-sidebar">
-        <div class="admin-menu-title">Admin Menu</div>
-        <ul class="admin-menu">
-            <li>
-                <a href="${pageContext.request.contextPath}/admin/dashboard">
-                    <i class="fas fa-tachometer-alt"></i> Dashboard
-                </a>
-            </li>
-            <li>
-                <a href="${pageContext.request.contextPath}/admin/users">
-                    <i class="fas fa-users"></i> Users
-                </a>
-            </li>
-            <li>
-                <a href="${pageContext.request.contextPath}/admin/restaurants">
-                    <i class="fas fa-utensils"></i> Restaurants
-                </a>
-            </li>
-            <li>
-                <a href="${pageContext.request.contextPath}/admin/menu-items">
-                    <i class="fas fa-hamburger"></i> Menu Items
-                </a>
-            </li>
-            <li>
-                <a href="${pageContext.request.contextPath}/admin/orders">
-                    <i class="fas fa-shopping-cart"></i> Orders
-                </a>
-            </li>
-            <li>
-                <a href="${pageContext.request.contextPath}/admin/reporting">
-                    <i class="fas fa-chart-bar"></i> Reports
-                </a>
-            </li>
-            <li>
-                <a href="${pageContext.request.contextPath}/admin/settings" class="active">
-                    <i class="fas fa-cog"></i> Settings
-                </a>
-            </li>
-        </ul>
-    </div>
+    <!-- Include Admin Sidebar -->
+    <jsp:include page="/WEB-INF/includes/admin-sidebar.jsp">
+        <jsp:param name="activeMenu" value="settings" />
+    </jsp:include>
 
     <!-- Admin Content -->
     <div class="admin-content">

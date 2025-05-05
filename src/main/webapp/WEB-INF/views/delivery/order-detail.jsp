@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <jsp:include page="/WEB-INF/includes/header.jsp">
     <jsp:param name="title" value="Delivery - ${pageTitle}" />
 </jsp:include>
@@ -32,7 +32,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-md-9 col-sm-12">
         <!-- Success and Error Messages -->
         <c:if test="${param.success != null}">
@@ -47,7 +47,7 @@
                 </c:choose>
             </div>
         </c:if>
-        
+
         <c:if test="${param.error != null}">
             <div class="alert alert-danger" role="alert">
                 <c:choose>
@@ -63,7 +63,7 @@
                 </c:choose>
             </div>
         </c:if>
-        
+
         <div class="card">
             <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
@@ -101,7 +101,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="col-md-6">
                         <h3>Customer Information</h3>
                         <div class="card" style="margin-bottom: 1rem;">
@@ -116,7 +116,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <h3>Order Items</h3>
                 <div class="table-responsive">
                     <table class="table">
@@ -160,12 +160,12 @@
                         </tfoot>
                     </table>
                 </div>
-                
+
                 <div style="margin-top: 1.5rem;">
                     <a href="${pageContext.request.contextPath}/delivery/orders" class="btn btn-secondary">
                         <i class="fas fa-arrow-left"></i> Back to Orders
                     </a>
-                    
+
                     <c:if test="${order.status == 'READY'}">
                         <form action="${pageContext.request.contextPath}/delivery/orders/update" method="post" style="display: inline;">
                             <input type="hidden" name="orderId" value="${order.id}">
@@ -175,7 +175,7 @@
                             </button>
                         </form>
                     </c:if>
-                    
+
                     <c:if test="${order.status == 'OUT_FOR_DELIVERY'}">
                         <form action="${pageContext.request.contextPath}/delivery/orders/update" method="post" style="display: inline;">
                             <input type="hidden" name="orderId" value="${order.id}">

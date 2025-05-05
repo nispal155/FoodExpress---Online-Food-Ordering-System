@@ -18,29 +18,29 @@ import java.util.Random;
  */
 @WebServlet(name = "ForgotPasswordServlet", urlPatterns = {"/forgot-password"})
 public class ForgotPasswordServlet extends HttpServlet {
-    
+
     private final UserService userService = new UserService();
-    private final EmailService emailService = new EmailService();
-    
+    // EmailService has static methods, no need to instantiate
+
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Display the forgot password form
         request.getRequestDispatcher("/WEB-INF/views/auth/forgot-password.jsp").forward(request, response);
     }
-    
+
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String email = request.getParameter("email");
-        
+
         // Validate email
         if (email == null || email.trim().isEmpty()) {
             request.setAttribute("error", "Email is required");
             request.getRequestDispatcher("/WEB-INF/views/auth/forgot-password.jsp").forward(request, response);
             return;
         }
-        
+
         // Check if user exists
         User user = userService.getUserByEmail(email);
         if (user == null) {
@@ -48,23 +48,23 @@ public class ForgotPasswordServlet extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/views/auth/forgot-password.jsp").forward(request, response);
             return;
         }
-        
+
         // Generate verification code
         String verificationCode = generateVerificationCode();
-        
+
         // Store verification code in session
         HttpSession session = request.getSession();
         session.setAttribute("resetEmail", email);
         session.setAttribute("verificationCode", verificationCode);
         session.setAttribute("verificationCodeExpiry", System.currentTimeMillis() + (15 * 60 * 1000)); // 15 minutes
-        
+
         // Send verification code to user's email
         String subject = "Food Express - Password Reset Verification Code";
-        String message = "Your verification code for password reset is: " + verificationCode + 
+        String message = "Your verification code for password reset is: " + verificationCode +
                          "\n\nThis code will expire in 15 minutes.";
-        
-        boolean emailSent = emailService.sendEmail(email, subject, message);
-        
+
+        boolean emailSent = EmailService.sendEmail(email, subject, message, false);
+
         if (emailSent) {
             // Redirect to verification page
             response.sendRedirect(request.getContextPath() + "/reset-password");
@@ -73,7 +73,7 @@ public class ForgotPasswordServlet extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/views/auth/forgot-password.jsp").forward(request, response);
         }
     }
-    
+
     /**
      * Generate a random 6-digit verification code
      * @return the verification code

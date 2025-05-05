@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <jsp:include page="/WEB-INF/includes/header.jsp">
     <jsp:param name="title" value="Delivery - My Orders" />
 </jsp:include>
@@ -32,7 +32,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-md-9 col-sm-12">
         <!-- Success and Error Messages -->
         <c:if test="${param.success != null}">
@@ -47,7 +47,7 @@
                 </c:choose>
             </div>
         </c:if>
-        
+
         <c:if test="${param.error != null}">
             <div class="alert alert-danger" role="alert">
                 <c:choose>
@@ -66,7 +66,7 @@
                 </c:choose>
             </div>
         </c:if>
-        
+
         <div class="card">
             <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                 <h2 class="card-title">
@@ -99,7 +99,7 @@
                         Delivered
                     </a>
                 </div>
-                
+
                 <div class="table-responsive">
                     <table class="table">
                         <thead>

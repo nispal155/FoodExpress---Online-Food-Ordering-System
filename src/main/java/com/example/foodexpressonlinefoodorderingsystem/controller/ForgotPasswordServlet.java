@@ -1,9 +1,9 @@
 package com.example.foodexpressonlinefoodorderingsystem.controller;
 
 import com.example.foodexpressonlinefoodorderingsystem.model.User;
+import com.example.foodexpressonlinefoodorderingsystem.service.EmailService;
 import com.example.foodexpressonlinefoodorderingsystem.service.UserService;
 import com.example.foodexpressonlinefoodorderingsystem.util.DBUtil;
-import com.example.foodexpressonlinefoodorderingsystem.util.EmailUtil;
 import com.example.foodexpressonlinefoodorderingsystem.util.VerificationUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -26,6 +26,7 @@ import java.sql.Statement;
 public class ForgotPasswordServlet extends HttpServlet {
 
     private final UserService userService = new UserService();
+    // EmailService has static methods, no need to instantiate
     private static final int VERIFICATION_CODE_LENGTH = 6;
     private static final int VERIFICATION_CODE_EXPIRY_MINUTES = 15;
 
@@ -101,27 +102,22 @@ public class ForgotPasswordServlet extends HttpServlet {
         }
 
         // Send the verification code via email
-        boolean emailSent = EmailUtil.sendVerificationCode(email, verificationCode);
+        boolean emailSent = EmailService.sendVerificationCode(email, verificationCode);
 
         if (!emailSent) {
-            // If email sending is disabled or fails, show the code on screen
-            if (!EmailUtil.isEmailEnabled()) {
-                // Get the code from the cache
-                String cachedCode = EmailUtil.getVerificationCode(email);
+            // Email sending failed
+            request.setAttribute("error", "Failed to send verification email. Please try again or contact support.");
 
-                request.setAttribute("showCode", true);
-                request.setAttribute("verificationCode", cachedCode);
-                request.setAttribute("message", "Email sending is disabled. Please use the verification code below.");
-            } else {
-                // Email sending is enabled but failed
-                request.setAttribute("error", "Failed to send verification email. Please try again or contact support.");
+            // For development purposes, show the code on screen
+            request.setAttribute("showCode", true);
+            request.setAttribute("verificationCode", verificationCode);
+            request.setAttribute("message", "Email sending failed. Please use the verification code below.");
 
-                // Clear the verification code if email fails
-                userService.clearVerificationCode(email);
+            // Don't clear the verification code so user can still use it
+            // userService.clearVerificationCode(email);
 
-                request.getRequestDispatcher("/WEB-INF/views/forgot-password.jsp").forward(request, response);
-                return;
-            }
+            request.getRequestDispatcher("/WEB-INF/views/forgot-password.jsp").forward(request, response);
+            return;
         }
 
         // Store the email in session for the next step

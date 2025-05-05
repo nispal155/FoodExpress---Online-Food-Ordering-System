@@ -47,6 +47,13 @@
     text-decoration: underline;
 }
 
+.user-info {
+    margin: 5px 0 0;
+    font-size: 14px;
+    color: #666;
+    font-style: italic;
+}
+
 .back-button {
     display: inline-flex;
     align-items: center;
@@ -128,6 +135,118 @@
     margin-bottom: 20px;
 }
 
+/* Password Strength Meter */
+.password-strength-meter {
+    height: 5px;
+    background-color: #e0e0e0;
+    margin-top: 8px;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.password-strength-meter-fill {
+    height: 100%;
+    width: 0;
+    background-color: #ddd;
+    transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.strength-text {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+}
+
+/* Profile Picture Upload */
+.profile-upload-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+
+.profile-preview {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.profile-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 36px;
+}
+
+#profileImagePreview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-upload-controls {
+    flex: 1;
+}
+
+.upload-btn-wrapper {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+.upload-btn {
+    border: 2px solid #FF5722;
+    color: #FF5722;
+    background-color: white;
+    padding: 8px 16px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.upload-btn:hover {
+    background-color: #FF5722;
+    color: white;
+}
+
+.upload-btn i {
+    margin-right: 5px;
+}
+
+input[type="file"] {
+    font-size: 100px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+}
+
+.profile-upload-help {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.4;
+}
+
 .form-label {
     display: block;
     margin-bottom: 8px;
@@ -175,6 +294,15 @@
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(255, 87, 34, 0.2);
+}
+
+.form-input.is-invalid {
+    border-color: var(--danger-color);
+    background-color: rgba(244, 67, 54, 0.05);
+}
+
+.form-input.is-invalid:focus {
+    box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.2);
 }
 
 textarea.form-input {
@@ -316,15 +444,15 @@ input:checked + .toggle-slider:before {
         flex-direction: column;
         align-items: flex-start;
     }
-    
+
     .header-right {
         margin-top: 15px;
     }
-    
+
     .form-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .user-form-card {
         padding: 20px;
     }

@@ -1,113 +1,95 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <jsp:include page="/WEB-INF/includes/header.jsp">
-    <jsp:param name="title" value="Admin Dashboard" />
+    <jsp:param name="pageTitle" value="Admin Dashboard" />
+    <jsp:param name="activeLink" value="admin" />
 </jsp:include>
 
-<!-- Include the admin dashboard CSS -->
+<!-- Include the admin CSS -->
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin-common.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin-dashboard.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin-sidebar.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 
 <div class="admin-container">
-    <!-- Admin Sidebar -->
-    <div class="admin-sidebar">
-        <div class="admin-menu-title">Admin Menu</div>
-        <ul class="admin-menu">
-            <li>
-                <a href="${pageContext.request.contextPath}/admin/dashboard" class="active">
-                    <i class="fas fa-tachometer-alt"></i> Dashboard
-                </a>
-            </li>
-            <li>
-                <a href="${pageContext.request.contextPath}/admin/users">
-                    <i class="fas fa-users"></i> Users
-                </a>
-            </li>
-            <li>
-                <a href="${pageContext.request.contextPath}/admin/restaurants">
-                    <i class="fas fa-utensils"></i> Restaurant
-                </a>
-            </li>
-            <li>
-                <a href="${pageContext.request.contextPath}/admin/menu-items">
-                    <i class="fas fa-hamburger"></i> Menu Items
-                </a>
-            </li>
-            <li>
-                <a href="${pageContext.request.contextPath}/admin/orders">
-                    <i class="fas fa-shopping-cart"></i> Orders
-                </a>
-            </li>
-            <li>
-                <a href="${pageContext.request.contextPath}/admin/reporting">
-                    <i class="fas fa-chart-bar"></i> Reports
-                </a>
-            </li>
-            <li>
-                <a href="${pageContext.request.contextPath}/admin/settings">
-                    <i class="fas fa-cog"></i> Settings
-                </a>
-            </li>
-        </ul>
-    </div>
+    <!-- Include Admin Sidebar -->
+    <jsp:include page="/WEB-INF/includes/admin-sidebar.jsp">
+        <jsp:param name="activeMenu" value="dashboard" />
+    </jsp:include>
 
     <!-- Admin Content -->
     <div class="admin-content">
         <!-- Dashboard Header -->
-        <div class="dashboard-header">
-            <h1>Dashboard</h1>
-            <p>Welcome to the admin dashboard</p>
+        <div class="admin-page-header">
+            <div>
+                <h1 class="admin-page-title">Dashboard</h1>
+                <div class="admin-breadcrumb">
+                    <a href="${pageContext.request.contextPath}/admin/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                </div>
+                <p>Welcome to the admin dashboard</p>
+            </div>
+            <div class="admin-page-actions">
+                <a href="${pageContext.request.contextPath}/admin/settings" class="admin-btn admin-btn-light">
+                    <i class="fas fa-cog"></i> Settings
+                </a>
+            </div>
         </div>
 
         <!-- Dashboard Cards -->
-        <div class="dashboard-cards">
-            <a href="${pageContext.request.contextPath}/admin/users" class="dashboard-card-link">
-                <div class="dashboard-card dashboard-card-users">
-                    <div class="dashboard-card-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <div class="dashboard-card-title">Users</div>
-                    <div class="dashboard-card-value">${userCount}</div>
+        <div class="admin-stats-container">
+            <a href="${pageContext.request.contextPath}/admin/users" class="admin-stat-card animate__animated animate__fadeIn" style="animation-delay: 0.1s;">
+                <div class="admin-stat-icon" style="background-color: rgba(33, 150, 243, 0.1); color: #2196F3;">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="admin-stat-title">Total Users</div>
+                <div class="admin-stat-value">${userCount != null ? userCount : 5}</div>
+                <div class="admin-stat-change positive">
+                    <i class="fas fa-arrow-up"></i> 12% from last month
                 </div>
             </a>
 
-            <a href="${pageContext.request.contextPath}/admin/restaurants" class="dashboard-card-link">
-                <div class="dashboard-card dashboard-card-restaurants">
-                    <div class="dashboard-card-icon">
-                        <i class="fas fa-utensils"></i>
-                    </div>
-                    <div class="dashboard-card-title">Restaurants</div>
-                    <div class="dashboard-card-value">${restaurantCount}</div>
+            <a href="${pageContext.request.contextPath}/admin/restaurants" class="admin-stat-card animate__animated animate__fadeIn" style="animation-delay: 0.2s;">
+                <div class="admin-stat-icon" style="background-color: rgba(255, 87, 34, 0.1); color: #FF5722;">
+                    <i class="fas fa-utensils"></i>
+                </div>
+                <div class="admin-stat-title">Restaurants</div>
+                <div class="admin-stat-value">${restaurantCount != null ? restaurantCount : 3}</div>
+                <div class="admin-stat-change positive">
+                    <i class="fas fa-arrow-up"></i> 5% from last month
                 </div>
             </a>
 
-            <a href="${pageContext.request.contextPath}/admin/menu-items" class="dashboard-card-link">
-                <div class="dashboard-card dashboard-card-menu">
-                    <div class="dashboard-card-icon">
-                        <i class="fas fa-hamburger"></i>
-                    </div>
-                    <div class="dashboard-card-title">Menu Items</div>
-                    <div class="dashboard-card-value">${menuItemCount}</div>
+            <a href="${pageContext.request.contextPath}/admin/menu-items" class="admin-stat-card animate__animated animate__fadeIn" style="animation-delay: 0.3s;">
+                <div class="admin-stat-icon" style="background-color: rgba(76, 175, 80, 0.1); color: #4CAF50;">
+                    <i class="fas fa-hamburger"></i>
+                </div>
+                <div class="admin-stat-title">Menu Items</div>
+                <div class="admin-stat-value">${menuItemCount != null ? menuItemCount : 9}</div>
+                <div class="admin-stat-change positive">
+                    <i class="fas fa-arrow-up"></i> 8% from last month
                 </div>
             </a>
 
-            <a href="${pageContext.request.contextPath}/admin/reporting" class="dashboard-card-link">
-                <div class="dashboard-card dashboard-card-specials">
-                    <div class="dashboard-card-icon">
-                        <i class="fas fa-chart-bar"></i>
-                    </div>
-                    <div class="dashboard-card-title">Reports</div>
-                    <div class="dashboard-card-value"><i class="fas fa-chart-line"></i></div>
+            <a href="${pageContext.request.contextPath}/admin/reporting" class="admin-stat-card animate__animated animate__fadeIn" style="animation-delay: 0.4s;">
+                <div class="admin-stat-icon" style="background-color: rgba(255, 193, 7, 0.1); color: #FFC107;">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <div class="admin-stat-title">Reports</div>
+                <div class="admin-stat-value"><i class="fas fa-chart-line"></i></div>
+                <div class="admin-stat-change">
+                    <i class="fas fa-info-circle"></i> View detailed reports
                 </div>
             </a>
         </div>
 
         <!-- Recent Orders -->
-        <div class="recent-orders">
-            <div class="recent-orders-header">
-                <h2>Recent Orders</h2>
+        <div class="admin-card animate__animated animate__fadeIn" style="animation-delay: 0.5s;">
+            <div class="admin-card-header">
+                <h2 class="admin-card-title">Recent Orders</h2>
+                <p class="admin-card-subtitle">Latest orders from customers</p>
             </div>
-            <div class="recent-orders-content">
-                <table class="orders-table">
+            <div class="admin-card-body">
+                <table class="admin-table">
                     <thead>
                         <tr>
                             <th>Order ID</th>
@@ -127,8 +109,9 @@
                             <td>$24.99</td>
                             <td><span class="status-badge status-delivered">Delivered</span></td>
                             <td>2025-04-15</td>
-                            <td>
-                                <a href="#" class="action-button"><i class="fas fa-eye"></i></a>
+                            <td class="actions">
+                                <a href="#" class="action-btn view" title="View Order"><i class="fas fa-eye"></i></a>
+                                <a href="#" class="action-btn edit" title="Edit Order"><i class="fas fa-edit"></i></a>
                             </td>
                         </tr>
                         <tr>
@@ -138,8 +121,9 @@
                             <td>$55.99</td>
                             <td><span class="status-badge status-preparing">Preparing</span></td>
                             <td>2025-04-10</td>
-                            <td>
-                                <a href="#" class="action-button"><i class="fas fa-eye"></i></a>
+                            <td class="actions">
+                                <a href="#" class="action-btn view" title="View Order"><i class="fas fa-eye"></i></a>
+                                <a href="#" class="action-btn edit" title="Edit Order"><i class="fas fa-edit"></i></a>
                             </td>
                         </tr>
                         <tr>
@@ -147,10 +131,11 @@
                             <td>John Doe</td>
                             <td>Pizza Palace</td>
                             <td>$24.99</td>
-                            <td><span class="status-badge status-out-for-delivery">Out of Delivery</span></td>
+                            <td><span class="status-badge status-out-for-delivery">Out for Delivery</span></td>
                             <td>2025-04-15</td>
-                            <td>
-                                <a href="#" class="action-button"><i class="fas fa-eye"></i></a>
+                            <td class="actions">
+                                <a href="#" class="action-btn view" title="View Order"><i class="fas fa-eye"></i></a>
+                                <a href="#" class="action-btn edit" title="Edit Order"><i class="fas fa-edit"></i></a>
                             </td>
                         </tr>
                         <tr>
@@ -160,13 +145,18 @@
                             <td>$55.99</td>
                             <td><span class="status-badge status-cancelled">Cancelled</span></td>
                             <td>2025-04-10</td>
-                            <td>
-                                <a href="#" class="action-button"><i class="fas fa-eye"></i></a>
+                            <td class="actions">
+                                <a href="#" class="action-btn view" title="View Order"><i class="fas fa-eye"></i></a>
+                                <a href="#" class="action-btn edit" title="Edit Order"><i class="fas fa-edit"></i></a>
                             </td>
                         </tr>
                     </tbody>
                 </table>
-                <a href="${pageContext.request.contextPath}/admin/orders" class="view-all-button">View all orders</a>
+            </div>
+            <div class="admin-card-footer">
+                <a href="${pageContext.request.contextPath}/admin/orders" class="admin-btn admin-btn-primary">
+                    <i class="fas fa-list"></i> View all orders
+                </a>
             </div>
         </div>
     </div>

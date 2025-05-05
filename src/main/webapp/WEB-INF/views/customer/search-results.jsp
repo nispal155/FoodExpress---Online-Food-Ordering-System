@@ -1,13 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <jsp:include page="/WEB-INF/includes/header.jsp">
     <jsp:param name="title" value="Food Express - Search Results" />
 </jsp:include>
 
 <div class="container" style="padding: 2rem 0;">
     <h1 style="margin-bottom: 2rem;">Search Results</h1>
-    
+
     <!-- Search Form -->
     <div style="margin-bottom: 2rem;">
         <form action="${pageContext.request.contextPath}/search" method="get">
@@ -23,12 +23,12 @@
             </div>
         </form>
     </div>
-    
+
     <!-- Search Results -->
     <c:if test="${not empty query}">
         <p>Showing results for: <strong>${query}</strong></p>
     </c:if>
-    
+
     <div class="row">
         <c:forEach var="menuItem" items="${searchResults}">
             <div class="col-md-4 col-sm-6" style="margin-bottom: 2rem;">
@@ -78,7 +78,7 @@
                 </div>
             </div>
         </c:forEach>
-        
+
         <c:if test="${empty searchResults}">
             <div class="col-12">
                 <div class="alert alert-info" role="alert">
@@ -107,7 +107,7 @@
             <form action="${pageContext.request.contextPath}/cart" method="post">
                 <input type="hidden" name="action" value="add">
                 <input type="hidden" name="menuItemId" id="menuItemId">
-                
+
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="itemName" class="form-label">Item</label>
@@ -145,7 +145,7 @@
         document.getElementById('itemName').value = name;
         document.getElementById('restaurantName').value = restaurantName;
         document.getElementById('itemPrice').value = '$' + price.toFixed(2);
-        
+
         const modal = new bootstrap.Modal(document.getElementById('addToCartModal'));
         modal.show();
     }
