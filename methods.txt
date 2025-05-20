@@ -1,68 +1,247 @@
-# Food Express Online Food Ordering System - Methods Documentation
+# Food Express Online Food Ordering System - Complete Methods Documentation
 
-This document provides a comprehensive overview of the methods in the Food Express Online Food Ordering System, organized by layer and class.
+This document provides a comprehensive overview of all methods in the Food Express Online Food Ordering System, organized by package and class.
 
 ## Controller Layer Methods
 
-### 1. LoginServlet
-a. Methods
-   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Handles GET requests to the login page. Checks if the user is already logged in or has a remember-me cookie. If so, redirects to the appropriate page based on user role. Otherwise, displays the login page.
-   ii. `doPost(HttpServletRequest request, HttpServletResponse response)`: Processes login form submissions. Validates credentials, creates a session, sets remember-me cookie if requested, logs the login activity, and redirects to the appropriate page based on user role.
-   iii. `redirectBasedOnRole(User user, HttpServletRequest request, HttpServletResponse response)`: Helper method that redirects users to different pages based on their role (ADMIN, CUSTOMER, DELIVERY).
+### Base Controllers
 
-### 2. LogoutServlet
+#### 1. HelloServlet
 a. Methods
-   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Handles user logout by invalidating the session, clearing remember-me cookie, logging the logout activity, and redirecting to the home page.
+   i. `init()`: Initializes the servlet with a welcome message.
+   ii. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays a simple "Hello World" message.
+   iii. `destroy()`: Cleans up resources when the servlet is destroyed.
 
-### 3. RegisterServlet
+#### 2. AboutServlet
+a. Methods
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays the About Us page with company information.
+
+#### 3. ContactServlet
+a. Methods
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays the contact form.
+   ii. `doPost(HttpServletRequest request, HttpServletResponse response)`: Processes contact form submissions and sends the message to the administrator.
+
+#### 4. TermsServlet
+a. Methods
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays the Terms and Conditions page.
+
+#### 5. LoginServlet
+a. Methods
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Handles GET requests to the login page. Checks if the user is already logged in or has a remember-me cookie.
+   ii. `doPost(HttpServletRequest request, HttpServletResponse response)`: Processes login form submissions. Validates credentials and creates a session.
+   iii. `redirectBasedOnRole(User user, HttpServletRequest request, HttpServletResponse response)`: Helper method that redirects users based on their role.
+
+#### 6. LogoutServlet
+a. Methods
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Handles user logout by invalidating the session and clearing cookies.
+
+#### 7. RegisterServlet
 a. Methods
    i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays the registration form.
-   ii. `doPost(HttpServletRequest request, HttpServletResponse response)`: Processes registration form submissions. Validates input, creates a new user account, and redirects to the login page or shows error messages.
+   ii. `doPost(HttpServletRequest request, HttpServletResponse response)`: Processes registration form submissions.
 
-### 4. AdminDashboardServlet
+#### 8. ProfileServlet
 a. Methods
-   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays the admin dashboard with summary statistics (total users, orders, revenue, etc.) and recent activity.
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays the user's profile page.
+   ii. `doPost(HttpServletRequest request, HttpServletResponse response)`: Processes profile update form submissions.
 
-### 5. AdminUserListServlet
+#### 9. ProfilePictureUploadServlet
 a. Methods
-   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays a list of all users with filtering options by role.
+   i. `doPost(HttpServletRequest request, HttpServletResponse response)`: Processes profile picture uploads.
 
-### 6. AdminUserDeleteServlet
+#### 10. ProfilePictureServlet
 a. Methods
-   i. `doPost(HttpServletRequest request, HttpServletResponse response)`: Processes user deletion requests. Checks if the user exists and is not the current admin, then deletes the user and redirects back to the user list with a success or error message.
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Serves profile pictures to the browser.
 
-### 7. AdminMenuItemListServlet
+#### 11. DashboardServlet
 a. Methods
-   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays a list of all menu items with filtering options by restaurant and category.
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays the user dashboard based on role.
 
-### 8. AdminMenuItemFormServlet
+### Admin Controllers
+
+#### 1. AdminDashboardServlet
+a. Methods
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays the admin dashboard with summary statistics.
+
+#### 2. AdminUserListServlet
+a. Methods
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays a list of all users with filtering options.
+
+#### 3. AdminUserCreateServlet
+a. Methods
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays the form for creating a new user.
+   ii. `doPost(HttpServletRequest request, HttpServletResponse response)`: Processes user creation form submissions.
+
+#### 4. AdminUserEditServlet
+a. Methods
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays the form for editing a user.
+   ii. `doPost(HttpServletRequest request, HttpServletResponse response)`: Processes user edit form submissions.
+
+#### 5. AdminUserDeleteServlet
+a. Methods
+   i. `doPost(HttpServletRequest request, HttpServletResponse response)`: Processes user deletion requests.
+
+#### 6. AdminMenuItemListServlet
+a. Methods
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays a list of all menu items.
+
+#### 7. AdminMenuItemFormServlet
 a. Methods
    i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays the form for adding or editing a menu item.
-   ii. `doPost(HttpServletRequest request, HttpServletResponse response)`: Processes menu item form submissions. Validates input, saves the menu item, and redirects to the menu item list.
+   ii. `doPost(HttpServletRequest request, HttpServletResponse response)`: Processes menu item form submissions.
 
-### 9. AdminOrdersServlet
+#### 8. AdminMenuItemSaveServlet
 a. Methods
-   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays a list of all orders with filtering options by status.
+   i. `doPost(HttpServletRequest request, HttpServletResponse response)`: Processes menu item save requests.
 
-### 10. RestaurantDetailServlet
+#### 9. AdminMenuItemDeleteServlet
 a. Methods
-   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays the details of a restaurant, including its menu items categorized by food category.
+   i. `doPost(HttpServletRequest request, HttpServletResponse response)`: Processes menu item deletion requests.
 
-### 11. CartServlet
+#### 10. AdminMenuItemToggleServlet
+a. Methods
+   i. `doPost(HttpServletRequest request, HttpServletResponse response)`: Toggles a menu item's availability or special status.
+
+#### 11. AdminRestaurantListServlet
+a. Methods
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays a list of all restaurants.
+
+#### 12. AdminRestaurantFormServlet
+a. Methods
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays the form for adding or editing a restaurant.
+   ii. `doPost(HttpServletRequest request, HttpServletResponse response)`: Processes restaurant form submissions.
+
+#### 13. AdminOrdersServlet
+a. Methods
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays a list of all orders with filtering options.
+
+#### 14. AdminOrderDetailServlet
+a. Methods
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays the details of an order.
+
+#### 15. AdminOrderStatusServlet
+a. Methods
+   i. `doPost(HttpServletRequest request, HttpServletResponse response)`: Updates an order's status.
+
+#### 16. AdminOrderAssignServlet
+a. Methods
+   i. `doPost(HttpServletRequest request, HttpServletResponse response)`: Assigns a delivery person to an order.
+
+#### 17. AdminOrderCancelServlet
+a. Methods
+   i. `doPost(HttpServletRequest request, HttpServletResponse response)`: Cancels an order.
+
+#### 18. AdminReportingServlet
+a. Methods
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays the reporting page with sales and order statistics.
+
+#### 19. AdminReportPDFServlet
+a. Methods
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Generates and serves a PDF report.
+
+#### 20. AdminSettingsServlet
+a. Methods
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays the system settings page.
+   ii. `doPost(HttpServletRequest request, HttpServletResponse response)`: Processes settings form submissions.
+
+#### 21. AdminActivityLogsServlet
+a. Methods
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays the activity logs page.
+
+### Customer Controllers
+
+#### 1. HomeServlet
+a. Methods
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays the customer home page with featured restaurants and special menu items.
+
+#### 2. RestaurantListServlet
+a. Methods
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays a list of all restaurants for customers.
+
+#### 3. RestaurantDetailServlet
+a. Methods
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays the details of a restaurant, including its menu.
+
+#### 4. MenuSearchServlet
+a. Methods
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Processes menu search requests.
+
+#### 5. CartServlet
 a. Methods
    i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays the user's shopping cart.
    ii. `doPost(HttpServletRequest request, HttpServletResponse response)`: Processes cart actions like adding, updating, or removing items.
 
-### 12. CheckoutServlet
+#### 6. CheckoutServlet
 a. Methods
-   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays the checkout page with order summary and payment options.
-   ii. `doPost(HttpServletRequest request, HttpServletResponse response)`: Processes checkout form submissions. Creates an order, processes payment, and redirects to the order confirmation page.
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays the checkout page.
+   ii. `doPost(HttpServletRequest request, HttpServletResponse response)`: Processes checkout form submissions.
+
+#### 7. OrderConfirmationServlet
+a. Methods
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays the order confirmation page.
+
+#### 8. MyOrdersServlet
+a. Methods
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays a list of the user's orders.
+
+#### 9. OrderTrackingServlet
+a. Methods
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays the order tracking page.
+
+#### 10. RateOrderServlet
+a. Methods
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays the rating form for an order.
+   ii. `doPost(HttpServletRequest request, HttpServletResponse response)`: Processes rating form submissions.
+
+#### 11. FavoritesServlet
+a. Methods
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays the user's favorite restaurants and menu items.
+   ii. `doPost(HttpServletRequest request, HttpServletResponse response)`: Processes favorite actions like adding or removing items.
+
+### Delivery Controllers
+
+#### 1. DeliveryDashboardServlet
+a. Methods
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays the delivery person's dashboard.
+
+#### 2. DeliveryOrderListServlet
+a. Methods
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays a list of orders assigned to the delivery person.
+
+#### 3. DeliveryOrderDetailServlet
+a. Methods
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays the details of an order for delivery.
+
+#### 4. DeliveryOrderUpdateServlet
+a. Methods
+   i. `doPost(HttpServletRequest request, HttpServletResponse response)`: Updates an order's status during delivery.
+
+#### 5. DeliveryLocationUpdateServlet
+a. Methods
+   i. `doPost(HttpServletRequest request, HttpServletResponse response)`: Updates the delivery person's current location.
+
+### Authentication Controllers
+
+#### 1. ForgotPasswordServlet
+a. Methods
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays the forgot password form.
+   ii. `doPost(HttpServletRequest request, HttpServletResponse response)`: Processes forgot password form submissions.
+
+#### 2. ResetPasswordServlet
+a. Methods
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays the reset password form.
+   ii. `doPost(HttpServletRequest request, HttpServletResponse response)`: Processes reset password form submissions.
+
+#### 3. GoogleAuthServlet
+a. Methods
+   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Handles Google authentication redirects.
+   ii. `doPost(HttpServletRequest request, HttpServletResponse response)`: Processes Google authentication callbacks.
 
 ## Service Layer Methods
 
 ### 1. UserService
 a. Methods
-   i. `authenticateUser(String usernameOrEmail, String password)`: Authenticates a user by username or email and password. Returns the User object if authentication is successful, null otherwise.
+   i. `authenticateUser(String usernameOrEmail, String password)`: Authenticates a user by username or email and password.
    ii. `getUserById(int userId)`: Retrieves a user by their ID.
    iii. `getUserByUsername(String username)`: Retrieves a user by their username.
    iv. `getUserByEmail(String email)`: Retrieves a user by their email address.
@@ -75,6 +254,10 @@ a. Methods
    xi. `updatePassword(int userId, String newPassword)`: Updates a user's password.
    xii. `setVerificationCode(String email, String code)`: Sets a verification code for password reset.
    xiii. `verifyCode(String email, String code)`: Verifies a password reset code.
+   xiv. `countUsers()`: Counts the total number of users in the system.
+   xv. `countUsersByRole(String role)`: Counts the number of users with a specific role.
+   xvi. `updatePasswordWithBCrypt(int userId, String password)`: Updates a user's password with BCrypt hashing.
+   xvii. `mapResultSetToUser(ResultSet rs)`: Maps a database result set to a User object.
 
 ### 2. RestaurantService
 a. Methods
@@ -85,6 +268,8 @@ a. Methods
    v. `deleteRestaurant(int id)`: Deletes a restaurant by its ID.
    vi. `getTopRatedRestaurants(int limit)`: Retrieves the top-rated restaurants.
    vii. `searchRestaurants(String query)`: Searches for restaurants by name or description.
+   viii. `countRestaurants()`: Counts the total number of restaurants in the system.
+   ix. `mapResultSetToRestaurant(ResultSet rs)`: Maps a database result set to a Restaurant object.
 
 ### 3. MenuItemService
 a. Methods
@@ -98,6 +283,9 @@ a. Methods
    viii. `getSpecialMenuItems()`: Retrieves all menu items marked as specials.
    ix. `toggleMenuItemAvailability(int id)`: Toggles a menu item's availability status.
    x. `toggleMenuItemSpecial(int id)`: Toggles a menu item's special status.
+   xi. `countMenuItems()`: Counts the total number of menu items in the system.
+   xii. `countMenuItemsByRestaurant(int restaurantId)`: Counts the number of menu items for a specific restaurant.
+   xiii. `mapResultSetToMenuItem(ResultSet rs)`: Maps a database result set to a MenuItem object.
 
 ### 4. OrderService
 a. Methods
@@ -111,14 +299,91 @@ a. Methods
    viii. `getOrdersByDeliveryPerson(int deliveryPersonId)`: Retrieves all orders assigned to a specific delivery person.
    ix. `cancelOrder(int orderId)`: Cancels an order.
    x. `markOrderDelivered(int orderId)`: Marks an order as delivered.
+   xi. `countOrders()`: Counts the total number of orders in the system.
+   xii. `countOrdersByStatus(String status)`: Counts the number of orders with a specific status.
+   xiii. `getTotalRevenue()`: Calculates the total revenue from all orders.
+   xiv. `getRevenueByDateRange(Date startDate, Date endDate)`: Calculates the revenue for a specific date range.
+   xv. `mapResultSetToOrder(ResultSet rs)`: Maps a database result set to an Order object.
+   xvi. `mapResultSetToOrderItem(ResultSet rs)`: Maps a database result set to an OrderItem object.
 
-### 5. EmailService
+### 5. CategoryService
 a. Methods
-   i. `sendEmail(String to, String subject, String body)`: Sends an email with the specified subject and body to the recipient.
+   i. `getAllCategories()`: Retrieves all categories from the database.
+   ii. `getCategoryById(int id)`: Retrieves a category by its ID.
+   iii. `createCategory(Category category)`: Creates a new category in the database.
+   iv. `updateCategory(Category category)`: Updates an existing category's information.
+   v. `deleteCategory(int id)`: Deletes a category by its ID.
+   vi. `mapResultSetToCategory(ResultSet rs)`: Maps a database result set to a Category object.
+
+### 6. EmailService
+a. Methods
+   i. `sendEmail(String to, String subject, String body)`: Sends an email with the specified subject and body.
    ii. `sendVerificationEmail(String to, String code)`: Sends a verification code email for password reset.
    iii. `sendOrderConfirmation(String to, Order order)`: Sends an order confirmation email.
    iv. `sendRegistrationConfirmation(String to, User user)`: Sends a registration confirmation email.
    v. `sendPasswordResetEmail(String to, String resetLink)`: Sends a password reset email with a reset link.
+   vi. `createEmailSession()`: Creates a JavaMail session for sending emails.
+   vii. `buildOrderConfirmationEmail(Order order)`: Builds the HTML content for an order confirmation email.
+   viii. `buildRegistrationEmail(User user)`: Builds the HTML content for a registration confirmation email.
+
+### 7. RatingService
+a. Methods
+   i. `rateRestaurant(int userId, int restaurantId, int orderId, int rating, String comment)`: Adds a restaurant rating.
+   ii. `rateDeliveryPerson(int userId, int deliveryUserId, int orderId, int rating, String comment)`: Adds a delivery person rating.
+   iii. `rateMenuItem(int userId, int menuItemId, int orderId, int rating, String comment)`: Adds a menu item rating.
+   iv. `getRestaurantRatings(int restaurantId)`: Gets all ratings for a restaurant.
+   v. `getDeliveryPersonRatings(int deliveryUserId)`: Gets all ratings for a delivery person.
+   vi. `getMenuItemRatings(int menuItemId)`: Gets all ratings for a menu item.
+   vii. `calculateAverageRating(int entityId, String entityType)`: Calculates the average rating for an entity.
+   viii. `mapResultSetToReview(ResultSet rs)`: Maps a database result set to a Review object.
+   ix. `mapResultSetToDeliveryRating(ResultSet rs)`: Maps a database result set to a DeliveryRating object.
+   x. `mapResultSetToFoodRating(ResultSet rs)`: Maps a database result set to a FoodRating object.
+
+### 8. FavoriteService
+a. Methods
+   i. `addFavoriteRestaurant(int userId, int restaurantId)`: Adds a restaurant to a user's favorites.
+   ii. `removeFavoriteRestaurant(int userId, int restaurantId)`: Removes a restaurant from a user's favorites.
+   iii. `getFavoriteRestaurants(int userId)`: Gets all favorite restaurants for a user.
+   iv. `isFavoriteRestaurant(int userId, int restaurantId)`: Checks if a restaurant is in a user's favorites.
+   v. `addFavoriteMenuItem(int userId, int menuItemId)`: Adds a menu item to a user's favorites.
+   vi. `removeFavoriteMenuItem(int userId, int menuItemId)`: Removes a menu item from a user's favorites.
+   vii. `getFavoriteMenuItems(int userId)`: Gets all favorite menu items for a user.
+   viii. `isFavoriteMenuItem(int userId, int menuItemId)`: Checks if a menu item is in a user's favorites.
+
+### 9. ActivityLogService
+a. Methods
+   i. `logActivity(Integer userId, String username, String action, String entityType, Integer entityId, String details)`: Logs a user activity.
+   ii. `getRecentActivities(int limit)`: Gets the most recent activities.
+   iii. `getActivitiesByUser(int userId, int limit)`: Gets recent activities for a specific user.
+   iv. `getActivitiesByAction(String action, int limit)`: Gets recent activities of a specific type.
+   v. `mapResultSetToActivityLog(ResultSet rs)`: Maps a database result set to an ActivityLog object.
+
+### 10. PDFReportService
+a. Methods
+   i. `generateSalesReport(Date startDate, Date endDate)`: Generates a sales report PDF for a date range.
+   ii. `generateUserRegistrationDetails(User user)`: Generates a PDF with user registration details.
+   iii. `generateOrderInvoice(Order order)`: Generates a PDF invoice for an order.
+   iv. `addHeader(Document document, String title)`: Adds a header to a PDF document.
+   v. `addFooter(Document document)`: Adds a footer to a PDF document.
+   vi. `addTable(Document document, List<String[]> data, String[] headers)`: Adds a table to a PDF document.
+
+### 11. SettingsService
+a. Methods
+   i. `getSetting(String category, String name)`: Gets a setting value by category and name.
+   ii. `setSetting(String category, String name, String value, String description)`: Sets a setting value.
+   iii. `getSettingsByCategory(String category)`: Gets all settings in a specific category.
+   iv. `getAllSettings()`: Gets all settings.
+   v. `mapResultSetToSetting(ResultSet rs)`: Maps a database result set to a Setting object.
+
+### 12. ReportingService
+a. Methods
+   i. `getSalesReport(Date startDate, Date endDate)`: Generates a sales report for a date range.
+   ii. `getPopularItems(int limit)`: Gets the most popular menu items.
+   iii. `getRevenueByDay(Date startDate, Date endDate)`: Gets daily revenue for a date range.
+   iv. `getOrderCountByStatus()`: Gets the count of orders by status.
+   v. `getRevenueByRestaurant()`: Gets revenue by restaurant.
+   vi. `mapResultSetToSalesReport(ResultSet rs)`: Maps a database result set to a SalesReport object.
+   vii. `mapResultSetToPopularItem(ResultSet rs)`: Maps a database result set to a PopularItem object.
 
 ## Utility Layer Methods
 
@@ -129,24 +394,37 @@ a. Methods
    iii. `getUserFromRememberMeCookie(HttpServletRequest request)`: Retrieves a user from a remember-me cookie.
    iv. `clearRememberMeCookie(HttpServletRequest request, HttpServletResponse response)`: Clears a remember-me cookie.
    v. `getCurrentUser(HttpServletRequest request)`: Gets the current logged-in user from the session.
+   vi. `saveRememberMeToken(int userId, String token)`: Saves a remember-me token in the database.
+   vii. `getUserIdFromToken(String token)`: Gets the user ID associated with a remember-me token.
+   viii. `deleteRememberMeToken(String token)`: Deletes a remember-me token from the database.
+   ix. `deleteExistingTokensForUser(int userId)`: Deletes all existing tokens for a user.
+   x. `ensureUserSessionsTableExists()`: Ensures that the user_sessions table exists in the database.
+   xi. `cleanupExpiredTokens()`: Cleans up expired tokens from the database.
 
 ### 2. PasswordUtil
 a. Methods
    i. `hashPassword(String password)`: Hashes a password using BCrypt.
    ii. `verifyPassword(String password, String hashedPassword)`: Verifies a password against its hashed version.
    iii. `generateRandomPassword(int length)`: Generates a random password of the specified length.
+   iv. `generateVerificationCode(int length)`: Generates a random verification code.
+   v. `isStrongPassword(String password)`: Checks if a password meets strength requirements.
 
 ### 3. FileUploadUtil
 a. Methods
    i. `saveFile(InputStream inputStream, String path)`: Saves a file from an input stream to the specified path.
    ii. `getUniqueFileName(String originalFileName)`: Generates a unique file name to prevent overwriting existing files.
    iii. `createDirectoryIfNotExists(String directoryPath)`: Creates a directory if it doesn't exist.
+   iv. `getFileExtension(String fileName)`: Gets the extension of a file.
+   v. `isImageFile(String fileName)`: Checks if a file is an image based on its extension.
+   vi. `resizeImage(InputStream inputStream, String outputPath, int width, int height)`: Resizes an image.
 
 ### 4. ActivityLogger
 a. Methods
    i. `logLogin(User user, HttpServletRequest request)`: Logs a user login activity.
    ii. `logLogout(User user, HttpServletRequest request)`: Logs a user logout activity.
    iii. `logAction(User user, String action, String entityType, int entityId, String details, HttpServletRequest request)`: Logs a user action.
+   iv. `getClientIpAddress(HttpServletRequest request)`: Gets the client's IP address from the request.
+   v. `getUserAgent(HttpServletRequest request)`: Gets the user agent from the request.
 
 ### 5. DBUtil
 a. Methods
@@ -155,14 +433,50 @@ a. Methods
    iii. `closeStatement(Statement statement)`: Safely closes a statement.
    iv. `closeResultSet(ResultSet resultSet)`: Safely closes a result set.
    v. `rollback(Connection connection)`: Safely rolls back a transaction.
+   vi. `executeUpdate(String sql)`: Executes an update SQL statement.
+   vii. `executeQuery(String sql)`: Executes a query SQL statement and returns a result set.
+   viii. `getLastInsertId(Connection connection)`: Gets the ID of the last inserted record.
+
+### 6. EmailUtil
+a. Methods
+   i. `sendEmail(String to, String subject, String body)`: Sends an email.
+   ii. `createSession()`: Creates a JavaMail session.
+   iii. `loadConfiguration()`: Loads email configuration from properties file.
+   iv. `isEmailEnabled()`: Checks if email sending is enabled.
+   v. `validateEmailAddress(String email)`: Validates an email address format.
+
+### 7. VerificationUtil
+a. Methods
+   i. `generateVerificationCode()`: Generates a verification code.
+   ii. `isVerificationCodeValid(String code, Date expiryDate)`: Checks if a verification code is valid and not expired.
+   iii. `calculateExpiryDate(int expiryTimeInMinutes)`: Calculates an expiry date based on the current time.
+
+### 8. PropertyLoader
+a. Methods
+   i. `loadProperties(String filename)`: Loads properties from a file in the classpath.
+
+### 9. DatabaseSchemaUpdater
+a. Methods
+   i. `updateSchema()`: Updates the database schema if needed.
+   ii. `executeUpdateScript(String scriptName)`: Executes a SQL script from the classpath.
+   iii. `isSchemaUpdated()`: Checks if the schema has been updated.
+
+### 10. FileExistsFunction
+a. Methods
+   i. `fileExists(String path)`: Checks if a file exists at the specified path.
+   ii. `init()`: Initializes the function.
 
 ## Filter Layer Methods
 
 ### 1. AuthenticationFilter
 a. Methods
-   i. `doFilter(ServletRequest request, ServletResponse response, FilterChain chain)`: Intercepts requests to protected resources and checks if the user is authenticated. If not, redirects to the login page.
+   i. `doFilter(ServletRequest request, ServletResponse response, FilterChain chain)`: Intercepts requests to protected resources and checks if the user is authenticated.
    ii. `init(FilterConfig filterConfig)`: Initializes the filter.
    iii. `destroy()`: Cleans up resources when the filter is destroyed.
+   iv. `isProtectedResource(String path)`: Checks if a resource requires authentication.
+   v. `isAdminResource(String path)`: Checks if a resource requires admin privileges.
+   vi. `isDeliveryResource(String path)`: Checks if a resource requires delivery person privileges.
+   vii. `isCustomerResource(String path)`: Checks if a resource requires customer privileges.
 
 ## Model Layer Methods
 
@@ -178,13 +492,27 @@ a. Methods
    viii. `setEmail(String email)`: Sets the user's email.
    ix. `getFullName()`: Returns the user's full name.
    x. `setFullName(String fullName)`: Sets the user's full name.
-   xi. `getRole()`: Returns the user's role.
-   xii. `setRole(String role)`: Sets the user's role.
-   xiii. `isActive()`: Returns whether the user is active.
-   xiv. `setActive(boolean active)`: Sets whether the user is active.
-   xv. `getProfilePicture()`: Returns the path to the user's profile picture.
-   xvi. `setProfilePicture(String profilePicture)`: Sets the path to the user's profile picture.
-   xvii. `toString()`: Returns a string representation of the user.
+   xi. `getPhone()`: Returns the user's phone number.
+   xii. `setPhone(String phone)`: Sets the user's phone number.
+   xiii. `getAddress()`: Returns the user's address.
+   xiv. `setAddress(String address)`: Sets the user's address.
+   xv. `getRole()`: Returns the user's role.
+   xvi. `setRole(String role)`: Sets the user's role.
+   xvii. `getCreatedAt()`: Returns the date and time when the user was created.
+   xviii. `setCreatedAt(Date createdAt)`: Sets the date and time when the user was created.
+   xix. `getUpdatedAt()`: Returns the date and time when the user was last updated.
+   xx. `setUpdatedAt(Date updatedAt)`: Sets the date and time when the user was last updated.
+   xxi. `getLastLogin()`: Returns the date and time of the user's last login.
+   xxii. `setLastLogin(Date lastLogin)`: Sets the date and time of the user's last login.
+   xxiii. `isActive()`: Returns whether the user is active.
+   xxiv. `setActive(boolean active)`: Sets whether the user is active.
+   xxv. `getProfilePicture()`: Returns the path to the user's profile picture.
+   xxvi. `setProfilePicture(String profilePicture)`: Sets the path to the user's profile picture.
+   xxvii. `getVerificationCode()`: Returns the user's verification code.
+   xxviii. `setVerificationCode(String verificationCode)`: Sets the user's verification code.
+   xxix. `getVerificationCodeExpiry()`: Returns the expiry date of the user's verification code.
+   xxx. `setVerificationCodeExpiry(Date verificationCodeExpiry)`: Sets the expiry date of the user's verification code.
+   xxxi. `toString()`: Returns a string representation of the user.
 
 ### 2. Order
 a. Methods
@@ -208,11 +536,46 @@ a. Methods
    xviii. `setPaymentStatus(String paymentStatus)`: Sets the payment status of the order.
    xix. `getDeliveryAddress()`: Returns the delivery address for the order.
    xx. `setDeliveryAddress(String deliveryAddress)`: Sets the delivery address for the order.
-   xxi. `getOrderItems()`: Returns the list of items in the order.
-   xxii. `setOrderItems(List<OrderItem> orderItems)`: Sets the list of items in the order.
-   xxiii. `toString()`: Returns a string representation of the order.
+   xxi. `getDeliveryPhone()`: Returns the delivery phone number for the order.
+   xxii. `setDeliveryPhone(String deliveryPhone)`: Sets the delivery phone number for the order.
+   xxiii. `getDeliveryNotes()`: Returns the delivery notes for the order.
+   xxiv. `setDeliveryNotes(String deliveryNotes)`: Sets the delivery notes for the order.
+   xxv. `getEstimatedDeliveryTime()`: Returns the estimated delivery time for the order.
+   xxvi. `setEstimatedDeliveryTime(Date estimatedDeliveryTime)`: Sets the estimated delivery time for the order.
+   xxvii. `getActualDeliveryTime()`: Returns the actual delivery time for the order.
+   xxviii. `setActualDeliveryTime(Date actualDeliveryTime)`: Sets the actual delivery time for the order.
+   xxix. `isHasRated()`: Returns whether the order has been rated.
+   xxx. `setHasRated(boolean hasRated)`: Sets whether the order has been rated.
+   xxxi. `getOrderItems()`: Returns the list of items in the order.
+   xxxii. `setOrderItems(List<OrderItem> orderItems)`: Sets the list of items in the order.
+   xxxiii. `getRestaurant()`: Returns the restaurant for the order.
+   xxxiv. `setRestaurant(Restaurant restaurant)`: Sets the restaurant for the order.
+   xxxv. `getUser()`: Returns the user who placed the order.
+   xxxvi. `setUser(User user)`: Sets the user who placed the order.
+   xxxvii. `getDeliveryUser()`: Returns the delivery person assigned to the order.
+   xxxviii. `setDeliveryUser(User deliveryUser)`: Sets the delivery person assigned to the order.
+   xxxix. `toString()`: Returns a string representation of the order.
 
-### 3. MenuItem
+### 3. OrderItem
+a. Methods
+   i. `getId()`: Returns the order item's ID.
+   ii. `setId(int id)`: Sets the order item's ID.
+   iii. `getOrderId()`: Returns the ID of the order this item belongs to.
+   iv. `setOrderId(int orderId)`: Sets the ID of the order this item belongs to.
+   v. `getMenuItemId()`: Returns the ID of the menu item.
+   vi. `setMenuItemId(int menuItemId)`: Sets the ID of the menu item.
+   vii. `getQuantity()`: Returns the quantity of the item.
+   viii. `setQuantity(int quantity)`: Sets the quantity of the item.
+   ix. `getPrice()`: Returns the price of the item.
+   x. `setPrice(BigDecimal price)`: Sets the price of the item.
+   xi. `getSpecialInstructions()`: Returns the special instructions for the item.
+   xii. `setSpecialInstructions(String specialInstructions)`: Sets the special instructions for the item.
+   xiii. `getMenuItem()`: Returns the menu item.
+   xiv. `setMenuItem(MenuItem menuItem)`: Sets the menu item.
+   xv. `getSubtotal()`: Returns the subtotal for the item (price * quantity).
+   xvi. `toString()`: Returns a string representation of the order item.
+
+### 4. MenuItem
 a. Methods
    i. `getId()`: Returns the menu item's ID.
    ii. `setId(int id)`: Sets the menu item's ID.
@@ -234,9 +597,15 @@ a. Methods
    xviii. `setSpecial(boolean special)`: Sets whether the menu item is marked as a special.
    xix. `getDiscountPrice()`: Returns the discounted price of the menu item.
    xx. `setDiscountPrice(BigDecimal discountPrice)`: Sets the discounted price of the menu item.
-   xxi. `toString()`: Returns a string representation of the menu item.
+   xxi. `getCategory()`: Returns the category of the menu item.
+   xxii. `setCategory(Category category)`: Sets the category of the menu item.
+   xxiii. `getRestaurant()`: Returns the restaurant that offers this menu item.
+   xxiv. `setRestaurant(Restaurant restaurant)`: Sets the restaurant that offers this menu item.
+   xxv. `getEffectivePrice()`: Returns the effective price of the menu item (discount price if available, otherwise regular price).
+   xxvi. `getDiscountPercentage()`: Returns the discount percentage if the item is on special.
+   xxvii. `toString()`: Returns a string representation of the menu item.
 
-### 4. Restaurant
+### 5. Restaurant
 a. Methods
    i. `getId()`: Returns the restaurant's ID.
    ii. `setId(int id)`: Sets the restaurant's ID.
@@ -256,54 +625,105 @@ a. Methods
    xvi. `setRating(BigDecimal rating)`: Sets the rating of the restaurant.
    xvii. `isActive()`: Returns whether the restaurant is active.
    xviii. `setActive(boolean active)`: Sets whether the restaurant is active.
-   xix. `toString()`: Returns a string representation of the restaurant.
+   xix. `getMenuItems()`: Returns the menu items offered by the restaurant.
+   xx. `setMenuItems(List<MenuItem> menuItems)`: Sets the menu items offered by the restaurant.
+   xxi. `getCategories()`: Returns the categories of menu items offered by the restaurant.
+   xxii. `setCategories(List<Category> categories)`: Sets the categories of menu items offered by the restaurant.
+   xxiii. `toString()`: Returns a string representation of the restaurant.
 
-## Additional Controller Methods
-
-### 1. ProfileServlet
+### 6. Category
 a. Methods
-   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays the user's profile page.
-   ii. `doPost(HttpServletRequest request, HttpServletResponse response)`: Processes profile update form submissions.
+   i. `getId()`: Returns the category's ID.
+   ii. `setId(int id)`: Sets the category's ID.
+   iii. `getName()`: Returns the name of the category.
+   iv. `setName(String name)`: Sets the name of the category.
+   v. `getDescription()`: Returns the description of the category.
+   vi. `setDescription(String description)`: Sets the description of the category.
+   vii. `toString()`: Returns a string representation of the category.
 
-### 2. ForgotPasswordServlet
+### 7. Review
 a. Methods
-   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays the forgot password form.
-   ii. `doPost(HttpServletRequest request, HttpServletResponse response)`: Processes forgot password form submissions, generates a verification code, and sends it to the user's email.
+   i. `getId()`: Returns the review's ID.
+   ii. `setId(int id)`: Sets the review's ID.
+   iii. `getUserId()`: Returns the ID of the user who wrote the review.
+   iv. `setUserId(int userId)`: Sets the ID of the user who wrote the review.
+   v. `getRestaurantId()`: Returns the ID of the restaurant being reviewed.
+   vi. `setRestaurantId(int restaurantId)`: Sets the ID of the restaurant being reviewed.
+   vii. `getOrderId()`: Returns the ID of the order associated with the review.
+   viii. `setOrderId(Integer orderId)`: Sets the ID of the order associated with the review.
+   ix. `getRating()`: Returns the rating given in the review.
+   x. `setRating(int rating)`: Sets the rating given in the review.
+   xi. `getComment()`: Returns the comment given in the review.
+   xii. `setComment(String comment)`: Sets the comment given in the review.
+   xiii. `getCreatedAt()`: Returns the date and time when the review was created.
+   xiv. `setCreatedAt(Date createdAt)`: Sets the date and time when the review was created.
+   xv. `getUser()`: Returns the user who wrote the review.
+   xvi. `setUser(User user)`: Sets the user who wrote the review.
+   xvii. `toString()`: Returns a string representation of the review.
 
-### 3. ResetPasswordServlet
+### 8. DeliveryRating
 a. Methods
-   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays the reset password form.
-   ii. `doPost(HttpServletRequest request, HttpServletResponse response)`: Processes reset password form submissions, verifies the code, and updates the user's password.
+   i. `getId()`: Returns the delivery rating's ID.
+   ii. `setId(int id)`: Sets the delivery rating's ID.
+   iii. `getUserId()`: Returns the ID of the user who gave the rating.
+   iv. `setUserId(int userId)`: Sets the ID of the user who gave the rating.
+   v. `getDeliveryUserId()`: Returns the ID of the delivery person being rated.
+   vi. `setDeliveryUserId(int deliveryUserId)`: Sets the ID of the delivery person being rated.
+   vii. `getOrderId()`: Returns the ID of the order associated with the rating.
+   viii. `setOrderId(int orderId)`: Sets the ID of the order associated with the rating.
+   ix. `getRating()`: Returns the rating given.
+   x. `setRating(int rating)`: Sets the rating given.
+   xi. `getComment()`: Returns the comment given with the rating.
+   xii. `setComment(String comment)`: Sets the comment given with the rating.
+   xiii. `getCreatedAt()`: Returns the date and time when the rating was created.
+   xiv. `setCreatedAt(Date createdAt)`: Sets the date and time when the rating was created.
+   xv. `toString()`: Returns a string representation of the delivery rating.
 
-### 4. DeliveryDashboardServlet
+### 9. FoodRating
 a. Methods
-   i. `doGet(HttpServletRequest request, HttpServletResponse response)`: Displays the delivery person's dashboard with assigned orders.
+   i. `getId()`: Returns the food rating's ID.
+   ii. `setId(int id)`: Sets the food rating's ID.
+   iii. `getUserId()`: Returns the ID of the user who gave the rating.
+   iv. `setUserId(int userId)`: Sets the ID of the user who gave the rating.
+   v. `getMenuItemId()`: Returns the ID of the menu item being rated.
+   vi. `setMenuItemId(int menuItemId)`: Sets the ID of the menu item being rated.
+   vii. `getOrderId()`: Returns the ID of the order associated with the rating.
+   viii. `setOrderId(int orderId)`: Sets the ID of the order associated with the rating.
+   ix. `getRating()`: Returns the rating given.
+   x. `setRating(int rating)`: Sets the rating given.
+   xi. `getComment()`: Returns the comment given with the rating.
+   xii. `setComment(String comment)`: Sets the comment given with the rating.
+   xiii. `getCreatedAt()`: Returns the date and time when the rating was created.
+   xiv. `setCreatedAt(Date createdAt)`: Sets the date and time when the rating was created.
+   xv. `toString()`: Returns a string representation of the food rating.
 
-### 5. DeliveryOrderUpdateServlet
+### 10. ActivityLog
 a. Methods
-   i. `doPost(HttpServletRequest request, HttpServletResponse response)`: Processes order status updates from delivery personnel.
-
-## Additional Service Methods
-
-### 1. RatingService
-a. Methods
-   i. `rateRestaurant(int userId, int restaurantId, int orderId, int rating, String comment)`: Adds a restaurant rating.
-   ii. `rateDeliveryPerson(int userId, int deliveryUserId, int orderId, int rating, String comment)`: Adds a delivery person rating.
-   iii. `rateMenuItem(int userId, int menuItemId, int orderId, int rating, String comment)`: Adds a menu item rating.
-   iv. `getRestaurantRatings(int restaurantId)`: Gets all ratings for a restaurant.
-   v. `getDeliveryPersonRatings(int deliveryUserId)`: Gets all ratings for a delivery person.
-   vi. `getMenuItemRatings(int menuItemId)`: Gets all ratings for a menu item.
-   vii. `calculateAverageRating(int entityId, String entityType)`: Calculates the average rating for an entity.
-
-### 2. PDFReportService
-a. Methods
-   i. `generateSalesReport(Date startDate, Date endDate)`: Generates a sales report PDF for a date range.
-   ii. `generateUserRegistrationDetails(User user)`: Generates a PDF with user registration details.
-   iii. `generateOrderInvoice(Order order)`: Generates a PDF invoice for an order.
+   i. `getId()`: Returns the activity log's ID.
+   ii. `setId(int id)`: Sets the activity log's ID.
+   iii. `getUserId()`: Returns the ID of the user who performed the action.
+   iv. `setUserId(Integer userId)`: Sets the ID of the user who performed the action.
+   v. `getUsername()`: Returns the username of the user who performed the action.
+   vi. `setUsername(String username)`: Sets the username of the user who performed the action.
+   vii. `getAction()`: Returns the action performed.
+   viii. `setAction(String action)`: Sets the action performed.
+   ix. `getEntityType()`: Returns the type of entity affected by the action.
+   x. `setEntityType(String entityType)`: Sets the type of entity affected by the action.
+   xi. `getEntityId()`: Returns the ID of the entity affected by the action.
+   xii. `setEntityId(Integer entityId)`: Sets the ID of the entity affected by the action.
+   xiii. `getDetails()`: Returns the details of the action.
+   xiv. `setDetails(String details)`: Sets the details of the action.
+   xv. `getIpAddress()`: Returns the IP address from which the action was performed.
+   xvi. `setIpAddress(String ipAddress)`: Sets the IP address from which the action was performed.
+   xvii. `getUserAgent()`: Returns the user agent from which the action was performed.
+   xviii. `setUserAgent(String userAgent)`: Sets the user agent from which the action was performed.
+   xix. `getCreatedAt()`: Returns the date and time when the action was performed.
+   xx. `setCreatedAt(Date createdAt)`: Sets the date and time when the action was performed.
+   xxi. `toString()`: Returns a string representation of the activity log.
 
 ## Conclusion
 
-This document provides a comprehensive overview of the methods in the Food Express Online Food Ordering System. The system follows the MVC (Model-View-Controller) architecture, with clear separation of concerns:
+This document provides a comprehensive overview of all methods in the Food Express Online Food Ordering System. The system follows the MVC (Model-View-Controller) architecture, with clear separation of concerns:
 
 1. **Controller Layer**: Handles HTTP requests and responses, manages user interactions, and coordinates between the view and service layers.
 2. **Service Layer**: Contains the business logic, processes data, and interacts with the data access layer.
@@ -312,3 +732,5 @@ This document provides a comprehensive overview of the methods in the Food Expre
 5. **Filter Layer**: Intercepts requests for security and other cross-cutting concerns.
 
 The methods are organized by their respective classes and layers, making it easy to understand the system's structure and functionality. Each method has a brief description of its purpose and functionality, providing a quick reference for developers working on the system.
+
+This documentation covers all Java files in the project, including those in subdirectories, providing a complete reference for the codebase.
