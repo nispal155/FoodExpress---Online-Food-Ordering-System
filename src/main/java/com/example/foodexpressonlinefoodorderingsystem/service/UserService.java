@@ -272,19 +272,92 @@ public class UserService {
      * @return true if successful, false otherwise
      */
     public boolean deleteUser(int userId) {
-        String sql = "DELETE FROM users WHERE id = ?";
+        // First, check if the user exists
+        User user = getUserById(userId);
+        if (user == null) {
+            System.err.println("User not found with ID: " + userId);
+            return false;
+        }
 
-        try (Connection conn = DBUtil.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        Connection conn = null;
+        try {
+            conn = DBUtil.getConnection();
+            conn.setAutoCommit(false);
 
-            stmt.setInt(1, userId);
+            // Step 1: Check if user has orders
+            boolean hasOrders = false;
+            try (PreparedStatement checkStmt = conn.prepareStatement("SELECT COUNT(*) FROM orders WHERE user_id = ?")) {
+                checkStmt.setInt(1, userId);
+                ResultSet rs = checkStmt.executeQuery();
+                if (rs.next() && rs.getInt(1) > 0) {
+                    hasOrders = true;
+                }
+            }
 
-            int affectedRows = stmt.executeUpdate();
-            return affectedRows > 0;
+            // Step 2: If user has orders, update orders to set user_id to NULL
+            if (hasOrders) {
+                System.out.println("User has orders, updating orders to set user_id to NULL");
+                try (PreparedStatement updateStmt = conn.prepareStatement("UPDATE orders SET user_id = NULL WHERE user_id = ?")) {
+                    updateStmt.setInt(1, userId);
+                    updateStmt.executeUpdate();
+                }
+            }
+
+            // Step 3: Check if user is assigned to orders as delivery person
+            boolean isDeliveryPerson = false;
+            try (PreparedStatement checkStmt = conn.prepareStatement("SELECT COUNT(*) FROM orders WHERE delivery_user_id = ?")) {
+                checkStmt.setInt(1, userId);
+                ResultSet rs = checkStmt.executeQuery();
+                if (rs.next() && rs.getInt(1) > 0) {
+                    isDeliveryPerson = true;
+                }
+            }
+
+            // Step 4: If user is assigned to orders, update orders to set delivery_user_id to NULL
+            if (isDeliveryPerson) {
+                System.out.println("User is assigned to orders as delivery person, updating orders to set delivery_user_id to NULL");
+                try (PreparedStatement updateStmt = conn.prepareStatement("UPDATE orders SET delivery_user_id = NULL WHERE delivery_user_id = ?")) {
+                    updateStmt.setInt(1, userId);
+                    updateStmt.executeUpdate();
+                }
+            }
+
+            // Step 5: Delete the user
+            try (PreparedStatement deleteStmt = conn.prepareStatement("DELETE FROM users WHERE id = ?")) {
+                deleteStmt.setInt(1, userId);
+                int affectedRows = deleteStmt.executeUpdate();
+
+                // If successful, commit the transaction
+                conn.commit();
+                System.out.println("Successfully deleted user with ID: " + userId);
+                return affectedRows > 0;
+            }
 
         } catch (SQLException e) {
+            // If there's an error, roll back the transaction
+            try {
+                if (conn != null) {
+                    conn.rollback();
+                }
+            } catch (SQLException ex) {
+                System.err.println("Error rolling back transaction: " + ex.getMessage());
+            }
+
+            // Print the error details
             System.err.println("Error deleting user: " + e.getMessage());
+            e.printStackTrace();
             return false;
+
+        } finally {
+            // Reset auto-commit to true and close connection
+            try {
+                if (conn != null) {
+                    conn.setAutoCommit(true);
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                System.err.println("Error resetting auto-commit or closing connection: " + ex.getMessage());
+            }
         }
     }
 
@@ -409,6 +482,18 @@ public class UserService {
         int offset = (page - 1) * pageSize;
 
         try (Connection conn = DBUtil.getConnection()) {
+            // Validate role parameter
+            if (role == null || role.isEmpty()) {
+                return getAllUsersPaginated(page, pageSize);
+            }
+
+            // Ensure role is uppercase for comparison
+            role = role.toUpperCase();
+            if (!role.equals("ADMIN") && !role.equals("CUSTOMER") && !role.equals("DELIVERY")) {
+                return getAllUsersPaginated(page, pageSize);
+            }
+
+            System.out.println("Executing SQL query for role: " + role);
             String sql = "SELECT * FROM users WHERE role = ? ORDER BY id LIMIT ? OFFSET ?";
 
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -420,9 +505,12 @@ public class UserService {
                 while (rs.next()) {
                     users.add(mapResultSetToUser(rs));
                 }
+
+                System.out.println("Found " + users.size() + " users with role " + role);
             }
         } catch (SQLException e) {
             System.err.println("Error getting paginated users by role: " + e.getMessage());
+            e.printStackTrace();
         }
 
         return users;
@@ -434,6 +522,18 @@ public class UserService {
      * @return Total number of users with the specified role
      */
     public int countUsersByRole(String role) {
+        // Validate role parameter
+        if (role == null || role.isEmpty()) {
+            return countAllUsers();
+        }
+
+        // Ensure role is uppercase for comparison
+        role = role.toUpperCase();
+        if (!role.equals("ADMIN") && !role.equals("CUSTOMER") && !role.equals("DELIVERY")) {
+            return countAllUsers();
+        }
+
+        System.out.println("Counting users with role: " + role);
         String sql = "SELECT COUNT(*) FROM users WHERE role = ?";
         int count = 0;
 
@@ -445,10 +545,12 @@ public class UserService {
 
             if (rs.next()) {
                 count = rs.getInt(1);
+                System.out.println("Found " + count + " users with role " + role);
             }
 
         } catch (SQLException e) {
             System.err.println("Error counting users by role: " + e.getMessage());
+            e.printStackTrace();
         }
 
         return count;
@@ -590,18 +692,21 @@ public class UserService {
     /**
      * Update the last login time for a user
      * @param userId the user ID
+     * @return true if successful, false otherwise
      */
-    private void updateLastLogin(int userId) {
+    public boolean updateLastLogin(int userId) {
         String sql = "UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = ?";
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, userId);
-            stmt.executeUpdate();
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
 
         } catch (SQLException e) {
             System.err.println("Error updating last login time: " + e.getMessage());
+            return false;
         }
     }
 

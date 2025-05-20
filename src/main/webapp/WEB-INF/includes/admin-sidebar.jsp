@@ -69,6 +69,13 @@
                 <span>Settings</span>
             </a>
         </li>
+        <li>
+            <a href="${pageContext.request.contextPath}/admin/activity-logs"
+               class="${pageContext.request.servletPath eq '/WEB-INF/views/admin/activity-logs.jsp' ? 'active' : ''}">
+                <i class="fas fa-history"></i>
+                <span>Activity Logs</span>
+            </a>
+        </li>
     </ul>
 
     <div class="admin-user-info">
