@@ -1,0 +1,360 @@
+# Food Express Online Food Ordering System - Class Diagram Details
+
+This document provides comprehensive information about all Java classes in the Food Express Online Food Ordering System, including their attributes with data types and methods. This information is organized to facilitate the creation of a detailed class diagram.
+
+## Model Classes
+
+### 1. User
+**Attributes:**
+- id: int
+- username: String
+- password: String
+- email: String
+- fullName: String
+- phone: String
+- address: String
+- createdAt: Date
+- updatedAt: Date
+- lastLogin: Date
+- isActive: boolean
+- role: String
+- profilePicture: String
+- verificationCode: String
+- verificationCodeExpiry: Date
+
+**Methods:**
+- User()
+- User(int id, String username, String password, String email, String fullName, String phone, String address, Date createdAt, Date updatedAt, Date lastLogin, boolean isActive, String role)
+- getId(): int
+- setId(int id): void
+- getUsername(): String
+- setUsername(String username): void
+- getPassword(): String
+- setPassword(String password): void
+- getEmail(): String
+- setEmail(String email): void
+- getFullName(): String
+- setFullName(String fullName): void
+- getPhone(): String
+- setPhone(String phone): void
+- getAddress(): String
+- setAddress(String address): void
+- getCreatedAt(): Date
+- setCreatedAt(Date createdAt): void
+- getUpdatedAt(): Date
+- setUpdatedAt(Date updatedAt): void
+- getRole(): String
+- setRole(String role): void
+- getLastLogin(): Date
+- setLastLogin(Date lastLogin): void
+- isActive(): boolean
+- setActive(boolean active): void
+- getProfilePicture(): String
+- setProfilePicture(String profilePicture): void
+- getVerificationCode(): String
+- setVerificationCode(String verificationCode): void
+- getVerificationCodeExpiry(): Date
+- setVerificationCodeExpiry(Date verificationCodeExpiry): void
+- toString(): String
+
+### 2. Restaurant
+**Attributes:**
+- id: int
+- name: String
+- description: String
+- address: String
+- phone: String
+- email: String
+- imageUrl: String
+- rating: double
+- isActive: boolean
+- createdAt: Date
+- updatedAt: Date
+
+**Methods:**
+- Restaurant()
+- Restaurant(int id, String name, String description, String address, String phone, String email, String imageUrl, double rating, boolean isActive, Date createdAt, Date updatedAt)
+- getId(): int
+- setId(int id): void
+- getName(): String
+- setName(String name): void
+- getDescription(): String
+- setDescription(String description): void
+- getAddress(): String
+- setAddress(String address): void
+- getPhone(): String
+- setPhone(String phone): void
+- getEmail(): String
+- setEmail(String email): void
+- getImageUrl(): String
+- setImageUrl(String imageUrl): void
+- getRating(): double
+- setRating(double rating): void
+- isActive(): boolean
+- setActive(boolean active): void
+- getCreatedAt(): Date
+- setCreatedAt(Date createdAt): void
+- getUpdatedAt(): Date
+- setUpdatedAt(Date updatedAt): void
+- toString(): String
+
+### 3. MenuItem
+**Attributes:**
+- id: int
+- restaurantId: int
+- categoryId: int
+- name: String
+- description: String
+- price: BigDecimal
+- imageUrl: String
+- isAvailable: boolean
+- isSpecial: boolean
+- discountPrice: BigDecimal
+- createdAt: Date
+- updatedAt: Date
+- restaurantName: String
+- categoryName: String
+
+**Methods:**
+- MenuItem()
+- MenuItem(int id, int restaurantId, int categoryId, String name, String description, BigDecimal price, String imageUrl, boolean isAvailable, boolean isSpecial, BigDecimal discountPrice, Date createdAt, Date updatedAt)
+- getId(): int
+- setId(int id): void
+- getRestaurantId(): int
+- setRestaurantId(int restaurantId): void
+- getCategoryId(): int
+- setCategoryId(int categoryId): void
+- getName(): String
+- setName(String name): void
+- getDescription(): String
+- setDescription(String description): void
+- getPrice(): BigDecimal
+- setPrice(BigDecimal price): void
+- getImageUrl(): String
+- setImageUrl(String imageUrl): void
+- isAvailable(): boolean
+- setAvailable(boolean available): void
+- isSpecial(): boolean
+- setSpecial(boolean special): void
+- getDiscountPrice(): BigDecimal
+- setDiscountPrice(BigDecimal discountPrice): void
+- getCreatedAt(): Date
+- setCreatedAt(Date createdAt): void
+- getUpdatedAt(): Date
+- setUpdatedAt(Date updatedAt): void
+- getRestaurantName(): String
+- setRestaurantName(String restaurantName): void
+- getCategoryName(): String
+- setCategoryName(String categoryName): void
+- getEffectivePrice(): BigDecimal
+- getDiscountPercentage(): int
+- toString(): String
+
+### 4. Order
+**Attributes:**
+- id: int
+- userId: int
+- restaurantId: int
+- deliveryUserId: Integer
+- orderDate: Date
+- totalAmount: BigDecimal
+- status: String
+- paymentMethod: String
+- paymentStatus: String
+- deliveryAddress: String
+- deliveryPhone: String
+- deliveryNotes: String
+- estimatedDeliveryTime: Date
+- actualDeliveryTime: Date
+- createdAt: Date
+- updatedAt: Date
+- hasRated: boolean
+- orderItems: List<OrderItem>
+
+**Methods:**
+- Order()
+- Order(int id, int userId, int restaurantId, Integer deliveryUserId, Date orderDate, BigDecimal totalAmount, String status, String paymentMethod, String paymentStatus, String deliveryAddress, String deliveryPhone, String deliveryNotes, Date estimatedDeliveryTime, Date actualDeliveryTime, Date createdAt, Date updatedAt)
+- getId(): int
+- setId(int id): void
+- getUserId(): int
+- setUserId(int userId): void
+- getRestaurantId(): int
+- setRestaurantId(int restaurantId): void
+- getDeliveryUserId(): Integer
+- setDeliveryUserId(Integer deliveryUserId): void
+- getOrderDate(): Date
+- setOrderDate(Date orderDate): void
+- getTotalAmount(): BigDecimal
+- setTotalAmount(BigDecimal totalAmount): void
+- getStatus(): String
+- setStatus(String status): void
+- getPaymentMethod(): String
+- setPaymentMethod(String paymentMethod): void
+- getPaymentStatus(): String
+- setPaymentStatus(String paymentStatus): void
+- getDeliveryAddress(): String
+- setDeliveryAddress(String deliveryAddress): void
+- getDeliveryPhone(): String
+- setDeliveryPhone(String deliveryPhone): void
+- getDeliveryNotes(): String
+- setDeliveryNotes(String deliveryNotes): void
+- getEstimatedDeliveryTime(): Date
+- setEstimatedDeliveryTime(Date estimatedDeliveryTime): void
+- getActualDeliveryTime(): Date
+- setActualDeliveryTime(Date actualDeliveryTime): void
+- getCreatedAt(): Date
+- setCreatedAt(Date createdAt): void
+- getUpdatedAt(): Date
+- setUpdatedAt(Date updatedAt): void
+- isHasRated(): boolean
+- setHasRated(boolean hasRated): void
+- getOrderItems(): List<OrderItem>
+- setOrderItems(List<OrderItem> orderItems): void
+- getStatusCssClass(): String
+- toString(): String
+
+### 5. OrderItem
+**Attributes:**
+- id: int
+- orderId: int
+- menuItemId: int
+- quantity: int
+- price: BigDecimal
+- specialInstructions: String
+
+**Methods:**
+- OrderItem()
+- OrderItem(int id, int orderId, int menuItemId, int quantity, BigDecimal price, String specialInstructions)
+- getId(): int
+- setId(int id): void
+- getOrderId(): int
+- setOrderId(int orderId): void
+- getMenuItemId(): int
+- setMenuItemId(int menuItemId): void
+- getQuantity(): int
+- setQuantity(int quantity): void
+- getPrice(): BigDecimal
+- setPrice(BigDecimal price): void
+- getSpecialInstructions(): String
+- setSpecialInstructions(String specialInstructions): void
+- getSubtotal(): BigDecimal
+- toString(): String
+
+## Service Classes
+
+### 1. UserService
+**Methods:**
+- UserService()
+- authenticateUser(String usernameOrEmail, String password): User
+- getUserById(int userId): User
+- getUserByUsername(String username): User
+- getUserByEmail(String email): User
+- createUser(User user): boolean
+- updateUser(User user): boolean
+- deleteUser(int userId): boolean
+- getAllUsers(): List<User>
+- getUsersByRole(String role): List<User>
+- updateLastLogin(int userId): boolean
+- updatePassword(int userId, String newPassword): boolean
+- setVerificationCode(String email, String code): boolean
+- verifyCode(String email, String code): boolean
+- countUsers(): int
+- countUsersByRole(String role): int
+- mapResultSetToUser(ResultSet rs): User
+
+### 2. RestaurantService
+**Methods:**
+- RestaurantService()
+- getAllRestaurants(): List<Restaurant>
+- getRestaurantById(int id): Restaurant
+- createRestaurant(Restaurant restaurant): boolean
+- updateRestaurant(Restaurant restaurant): boolean
+- deleteRestaurant(int id): boolean
+- getTopRatedRestaurants(int limit): List<Restaurant>
+- searchRestaurants(String query): List<Restaurant>
+- countRestaurants(): int
+- mapResultSetToRestaurant(ResultSet rs): Restaurant
+
+### 3. MenuItemService
+**Methods:**
+- MenuItemService()
+- getAllMenuItems(): List<MenuItem>
+- getMenuItemById(int id): MenuItem
+- getMenuItemsByRestaurant(int restaurantId): List<MenuItem>
+- getMenuItemsByCategory(int categoryId): List<MenuItem>
+- createMenuItem(MenuItem menuItem): boolean
+- updateMenuItem(MenuItem menuItem): boolean
+- deleteMenuItem(int id): boolean
+- getSpecialMenuItems(): List<MenuItem>
+- toggleMenuItemAvailability(int id): boolean
+- toggleMenuItemSpecial(int id): boolean
+- countMenuItems(): int
+- countMenuItemsByRestaurant(int restaurantId): int
+- mapResultSetToMenuItem(ResultSet rs): MenuItem
+
+### 4. OrderService
+**Methods:**
+- OrderService()
+- createOrder(Order order): int
+- getOrderById(int id): Order
+- getOrdersByUser(int userId): List<Order>
+- getOrdersByRestaurant(int restaurantId): List<Order>
+- getOrdersByStatus(String status): List<Order>
+- updateOrderStatus(int orderId, String status): boolean
+- assignDeliveryPerson(int orderId, int deliveryPersonId): boolean
+- getOrdersByDeliveryPerson(int deliveryPersonId): List<Order>
+- cancelOrder(int orderId): boolean
+- markOrderDelivered(int orderId): boolean
+- countOrders(): int
+- countOrdersByStatus(String status): int
+- getTotalRevenue(): BigDecimal
+- getRevenueByDateRange(Date startDate, Date endDate): BigDecimal
+- mapResultSetToOrder(ResultSet rs): Order
+- mapResultSetToOrderItem(ResultSet rs): OrderItem
+
+## Relationships
+
+### Key Model Class Relationships
+
+1. **User** is related to:
+   - Order (One-to-Many): A user can place many orders
+   - Review (One-to-Many): A user can write many reviews
+   - DeliveryRating (One-to-Many): A user can give many delivery ratings
+   - FoodRating (One-to-Many): A user can give many food ratings
+   - Favorite (One-to-Many): A user can have many favorites
+   - ActivityLog (One-to-Many): A user can have many activity logs
+
+2. **Restaurant** is related to:
+   - MenuItem (One-to-Many): A restaurant can have many menu items
+   - Order (One-to-Many): A restaurant can have many orders
+   - Review (One-to-Many): A restaurant can have many reviews
+
+3. **MenuItem** is related to:
+   - OrderItem (One-to-Many): A menu item can be in many order items
+   - FoodRating (One-to-Many): A menu item can have many food ratings
+   - Category (Many-to-One): Many menu items can belong to one category
+
+4. **Order** is related to:
+   - OrderItem (One-to-Many): An order can have many order items
+   - User (Many-to-One): Many orders can be placed by one user
+   - Restaurant (Many-to-One): Many orders can be from one restaurant
+   - User (Many-to-One): Many orders can be assigned to one delivery person
+
+### Service Classes Dependencies
+
+1. **UserService** depends on User model
+2. **RestaurantService** depends on Restaurant model
+3. **MenuItemService** depends on MenuItem model
+4. **OrderService** depends on Order and OrderItem models
+
+## Conclusion
+
+This document provides a comprehensive overview of the key classes in the Food Express Online Food Ordering System, including their attributes, methods, and relationships. This information can be used to create a detailed class diagram that accurately represents the system's structure and behavior.
+
+The system follows a layered architecture with:
+1. Model classes that represent the data entities
+2. Service classes that contain the business logic
+3. Controller classes that handle HTTP requests and responses
+4. Utility classes that provide common functionality
+
+The relationships between classes are clearly defined, showing how the different components of the system interact with each other.
